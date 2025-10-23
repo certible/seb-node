@@ -1,0 +1,55 @@
+{
+  "name": "@certible/seb-config",
+  "version": "1.0.0",
+  "description": "Node.js library for creating Safe Exam Browser (SEB) configuration files",
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup src/index.ts --format cjs,esm --dts",
+    "test": "vitest",
+    "test:ci": "vitest --run",
+    "lint": "eslint src --ext .ts",
+    "prepublishOnly": "npm run build"
+  },
+  "keywords": [
+    "seb",
+    "safe-exam-browser"
+  ],
+  "author": "Certible <oberreiter@certible.com>",
+  "license": "MPL-2 License",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/certible/seb-node.git"
+  },
+  "bugs": {
+    "url": "https://github.com/certible/seb-node/issues"
+  },
+  "homepage": "https://github.com/certible/seb-node#readme",
+  "devDependencies": {
+    "@types/node": "^20.10.0",
+    "@typescript-eslint/eslint-plugin": "^8.46.2",
+    "@typescript-eslint/parser": "^8.46.2",
+    "eslint": "^9.38.0",
+    "tsup": "^8.0.1",
+    "typescript": "^5.3.2",
+    "vitest": "^4.0.1"
+  },
+  "dependencies": {
+    "zod": "^4.1.12"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
