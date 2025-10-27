@@ -125,9 +125,7 @@ if (keys.isAvailable) {
 }
 ```
 
-## API Reference
-
-### Import Paths
+## Import Paths
 
 ```typescript
 // Server-side: Main package
