@@ -64,7 +64,7 @@ export interface SEBGenerateResult {
  * ```
  */
 export async function generateSEBConfig(
-  config: Partial<SEBConfig>,
+  config: SEBConfig,
   options: SEBGenerateOptions = {},
 ): Promise<SEBGenerateResult> {
   const { encrypt = false, password, validate = true } = options;

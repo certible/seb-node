@@ -45,7 +45,7 @@ const permittedProcessSchema = processSchema.extend({
   runInBackground: z.boolean().default(false),
 });
 
-export const sebConfigSchema = z.object({
+export const sebConfigSchema = z.looseObject({
   // URLs and navigation
   startURL: z.url().describe('String containing the full URL (starting with http:// or https://) of the page to open when SEB is started'),
   quitURL: z.string().default('').describe('String containing the full URL (starting with http:// or https://) of the link to quit SEB/the exam session after the exam'),
@@ -203,7 +203,10 @@ export const sebConfigSchema = z.object({
 
   // Service policy
   sebServicePolicy: z.number().int().min(0).max(2).default(0).describe('Integer with a value representing one of the sebServicePolicies: 0=ignoreService, 1=indicateMissingService, 2=forceSebService'),
-});
+
+  /* required,partial hack to not apply defaults */
+  /* see https://github.com/colinhacks/zod/issues/5235 */
+}).required().partial(); 
 
 export type SEBConfig = z.infer<typeof sebConfigSchema>;
 export type URLFilterRule = z.infer<typeof urlFilterRuleSchema>;

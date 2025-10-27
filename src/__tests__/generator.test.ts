@@ -1,7 +1,9 @@
 import { promisify } from 'node:util';
 import { gunzip } from 'node:zlib';
 import { describe, expect, it } from 'vitest';
+import { parse as parsePlist } from 'fast-plist';
 import { decompressSEBFile, generateEncryptedSEB, generatePlainSEB, generateSEBConfig } from '../generator.js';
+import { generateConfigKey } from '../config-key.js';
 
 const gunzipAsync = promisify(gunzip);
 
@@ -40,18 +42,6 @@ describe('config generator', () => {
 
       const result = await generateSEBConfig(invalidConfig, { validate: false });
       expect(result).toBeDefined();
-    });
-
-    it('should include default values from schema', async () => {
-      const config = {
-        startURL: 'https://exam.example.com',
-      };
-
-      const result = await generateSEBConfig(config);
-
-      expect(result.xml).toContain('originatorVersion');
-      expect(result.xml).toContain('3.7.0');
-      expect(result.xml).toContain('allowQuit');
     });
 
     it('should handle URL filter rules', async () => {
@@ -210,6 +200,56 @@ describe('config generator', () => {
       const invalidData = Buffer.from('not a valid seb file');
 
       await expect(decompressSEBFile(invalidData)).rejects.toThrow();
+    });
+
+    it('should parse decompressed XML with fast-plist to get original config', async () => {
+      const config = {
+        startURL: 'https://exam.example.com',
+        allowQuit: false,
+        browserViewMode: 1,
+        enableURLFilter: true,
+        urlFilterRules: [
+          {
+            active: true,
+            regex: false,
+            expression: 'example.com',
+            action: 1,
+          },
+        ],
+        allowAudioCapture: true,
+        allowVideoCapture: false,
+      };
+
+      const result = await generateSEBConfig(config, { encrypt: false });
+      const decompressedXml = await decompressSEBFile(result.data);
+
+      const parsedConfig = parsePlist(decompressedXml);
+
+      const parsedKey = generateConfigKey(parsedConfig);
+      const originalKey = generateConfigKey(config);
+
+      expect(parsedKey).toBe(originalKey);
+    });
+
+    it('should parse decompressed encrypted XML with fast-plist to get original config', async () => {
+      const config = {
+        startURL: 'https://secure-exam.example.com',
+        allowQuit: true,
+        browserViewMode: 0,
+        sendBrowserExamKey: true,
+        browserExamKeySalt: true,
+      };
+      const password = 'test-password-123';
+
+      const result = await generateSEBConfig(config, { encrypt: true, password });
+      const decompressedXml = await decompressSEBFile(result.data, password);
+
+      const parsedConfig = parsePlist(decompressedXml);
+
+      const parsedKey = generateConfigKey(parsedConfig);
+      const originalKey = generateConfigKey(config);
+
+      expect(parsedKey).toBe(originalKey);
     });
   });
 });
