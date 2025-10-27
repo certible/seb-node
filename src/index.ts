@@ -8,6 +8,7 @@ export {
 export type { SEBConfigObject } from './config-key.js';
 
 export {
+  decompressSEBFile,
   generateEncryptedSEB,
   generatePlainSEB,
   generateSEBConfig,

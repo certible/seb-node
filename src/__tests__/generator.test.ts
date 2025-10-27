@@ -1,7 +1,7 @@
 import { promisify } from 'node:util';
 import { gunzip } from 'node:zlib';
 import { describe, expect, it } from 'vitest';
-import { generatePlainSEB, generateSEBConfig } from '../generator.js';
+import { decompressSEBFile, generateEncryptedSEB, generatePlainSEB, generateSEBConfig } from '../generator.js';
 
 const gunzipAsync = promisify(gunzip);
 
@@ -84,11 +84,9 @@ describe('config generator', () => {
       expect(result).toBeInstanceOf(Buffer);
       expect(result.length).toBeGreaterThan(0);
 
-      // Decompress outer layer
       const decompressed = await gunzipAsync(result);
 
-      // Check for "plnd" prefix
-      const prefix = decompressed.slice(0, 4).toString('utf8');
+      const prefix = decompressed.subarray(0, 4).toString('utf8');
       expect(prefix).toBe('plnd');
     });
   });
@@ -127,6 +125,91 @@ describe('config generator', () => {
       expect(result.xml).toContain('exam-12345'); // Check for ID in URL
       expect(result.xml).toContain('example.com');
       expect(result.xml).toContain('examKeySalt');
+    });
+  });
+
+  describe('decompressSEBFile', () => {
+    it('should decompress a plain unencrypted SEB file', async () => {
+      const config = {
+        startURL: 'https://exam.example.com',
+        allowQuit: false,
+      };
+
+      const result = await generateSEBConfig(config, { encrypt: false });
+      const xml = await decompressSEBFile(result.data);
+
+      expect(xml).toContain('<?xml version="1.0"');
+      expect(xml).toContain('<plist version="1.0">');
+      expect(xml).toContain('startURL');
+      expect(xml).toContain('https://exam.example.com');
+      expect(xml).toContain('allowQuit');
+    });
+
+    it('should decompress an encrypted SEB file with correct password', async () => {
+      const config = {
+        startURL: 'https://secure-exam.example.com',
+        allowQuit: true,
+      };
+      const password = 'test-password-123';
+
+      const result = await generateSEBConfig(config, { encrypt: true, password });
+      const xml = await decompressSEBFile(result.data, password);
+
+      expect(xml).toContain('<?xml version="1.0"');
+      expect(xml).toContain('<plist version="1.0">');
+      expect(xml).toContain('startURL');
+      expect(xml).toContain('https://secure-exam.example.com');
+      expect(xml).toContain('allowQuit');
+    });
+
+    it('should throw error when password is missing for encrypted file', async () => {
+      const config = {
+        startURL: 'https://exam.example.com',
+      };
+      const password = 'secret-password';
+
+      const result = await generateSEBConfig(config, { encrypt: true, password });
+
+      await expect(decompressSEBFile(result.data)).rejects.toThrow(
+        'Password required for encrypted SEB file',
+      );
+    });
+
+    it('should throw error with wrong password for encrypted file', async () => {
+      const config = {
+        startURL: 'https://exam.example.com',
+      };
+      const correctPassword = 'correct-password';
+      const wrongPassword = 'wrong-password';
+
+      const result = await generateSEBConfig(config, { encrypt: true, password: correctPassword });
+
+      await expect(decompressSEBFile(result.data, wrongPassword)).rejects.toThrow();
+    });
+
+    it('should handle plain SEB files generated with generatePlainSEB', async () => {
+      const xml = '<?xml version="1.0"?><plist version="1.0"><dict><key>startURL</key><string>https://test.com</string></dict></plist>';
+      const sebData = await generatePlainSEB(xml);
+
+      const decompressedXml = await decompressSEBFile(sebData);
+
+      expect(decompressedXml).toBe(xml);
+    });
+
+    it('should handle encrypted SEB files generated with generateEncryptedSEB', async () => {
+      const xml = '<?xml version="1.0"?><plist version="1.0"><dict><key>allowQuit</key><true/></dict></plist>';
+      const password = 'encryption-test-password';
+      const sebData = await generateEncryptedSEB(xml, password);
+
+      const decompressedXml = await decompressSEBFile(sebData, password);
+
+      expect(decompressedXml).toBe(xml);
+    });
+
+    it('should throw error for invalid SEB file format', async () => {
+      const invalidData = Buffer.from('not a valid seb file');
+
+      await expect(decompressSEBFile(invalidData)).rejects.toThrow();
     });
   });
 });

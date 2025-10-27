@@ -1,11 +1,12 @@
 import type { SEBConfig } from './schema.js';
 import crypto from 'node:crypto';
 import { promisify } from 'node:util';
-import { gzip } from 'node:zlib';
+import { gunzip, gzip } from 'node:zlib';
 import { generatePlistXml } from './plist.js';
 import { sebConfigSchema } from './schema.js';
 
 const gzipAsync = promisify(gzip);
+const gunzipAsync = promisify(gunzip);
 
 export interface SEBGenerateOptions {
   /**
@@ -140,4 +141,54 @@ export async function generateEncryptedSEB(plistXml: string, password: string): 
 
   const compressedData = await gzipAsync(prefixedData);
   return compressedData;
+}
+
+/**
+ * Decompress and optionally decrypt a SEB file
+ *
+ * @param sebData - The compressed SEB file data
+ * @param password - Optional password for encrypted files
+ * @returns The decompressed XML plist string
+ * @throws {Error} If the file format is invalid or decryption fails
+ *
+ * @example
+ * ```typescript
+ * const sebData = fs.readFileSync('exam.seb');
+ * const xml = await decompressSEBFile(sebData);
+ * // For encrypted files:
+ * const xml = await decompressSEBFile(sebData, 'password123');
+ * ```
+ */
+export async function decompressSEBFile(sebData: Buffer, password?: string): Promise<string> {
+  const decompressed = await gunzipAsync(sebData);
+
+  // Read prefix (4 bytes)
+  const prefix = decompressed.subarray(0, 4).toString('utf8');
+
+  if (prefix === 'plnd') {
+    const gzippedXml = decompressed.subarray(4);
+    const xmlBuffer = await gunzipAsync(gzippedXml);
+    return xmlBuffer.toString('utf8');
+  }
+  else if (prefix === 'pwcc') {
+    if (!password) {
+      throw new Error('Password required for encrypted SEB file');
+    }
+
+    const salt = decompressed.subarray(4, 20);
+    const iv = decompressed.subarray(20, 36);
+    const encrypted = decompressed.subarray(36);
+
+    // Derive key from password
+    const key = crypto.pbkdf2Sync(password, salt, 10000, 32, 'sha256');
+
+    const decipher = crypto.createDecipheriv('aes-256-cbc', key, iv);
+    const decrypted = Buffer.concat([decipher.update(encrypted), decipher.final()]);
+
+    const xmlBuffer = await gunzipAsync(decrypted);
+    return xmlBuffer.toString('utf8');
+  }
+  else {
+    throw new Error(`Unknown SEB file format. Prefix: ${prefix}`);
+  }
 }
