@@ -42,7 +42,7 @@ const permittedProcessSchema = processSchema.extend({
   arguments: z.array(z.string()).optional(),
   autostart: z.boolean().default(false),
   iconInTaskbar: z.boolean().default(true),
-  runInBackground: z.boolean().default(false)
+  runInBackground: z.boolean().default(false),
 });
 
 export const sebConfigSchema = z.object({
@@ -76,7 +76,7 @@ export const sebConfigSchema = z.object({
   newBrowserWindowAllowReload: z.boolean().default(true).describe('Boolean indicating if reload is allowed in additional browser windows'),
   newBrowserWindowNavigation: z.boolean().default(true).describe('Boolean indicating if browsing back to previously visited pages is allowed in additional browser windows'),
   newBrowserWindowShowReloadWarning: z.boolean().default(false).describe('Boolean indicating if a warning should be displayed before reloading the web page in an additional browser window'),
-  browserWindowWebView: z.number().int().min(0).max(4).default(3).describe('Integer with a value representing the browser engine to use'),
+  browserWindowWebView: z.number().int().min(0).max(4).default(3).describe('Integer with a value representing the browser engine to use, 3 - Prefer Modern WebView, 4 - Force Modern WebView is needed for config key to work.'),
 
   // Navigation
   allowBrowsingBackForward: z.boolean().default(false).describe('Boolean indicating if browsing back to previously visited pages (and forward again) according to the browser history is allowed'),
@@ -181,11 +181,11 @@ export const sebConfigSchema = z.object({
   browserUserAgentWin: z.number().int().optional().describe('Integer with a value representing one browserUserAgentModeWin'),
   enableSebBrowser: z.boolean().default(true).describe('Boolean indicating if the SEB browser should be used'),
   showTime: z.boolean().default(true).describe('Boolean indicating if the current time should be displayed in the SEB dock/taskbar'),
-  
+
   // Exam settings
   examSessionClearCookiesOnEnd: z.boolean().default(true).describe('Boolean indicating if session cookies should be cleared when ending the current exam session'),
   examSessionClearCookiesOnStart: z.boolean().default(true).describe('Boolean indicating if session cookies should be cleared when starting the current exam session'),
-  
+
   // Additional security
   detectStoppedProcess: z.boolean().default(true).describe('Boolean indicating that it should be detected if the SEB process is stopped'),
   enableAppSwitcherCheck: z.boolean().default(true).describe('Boolean indicating whether SEB checks for the command key being held down while SEB is starting up'),
@@ -193,14 +193,14 @@ export const sebConfigSchema = z.object({
   pinEmbeddedCertificates: z.boolean().default(false).describe('Boolean indicating if the certificate store should not be used to evaluate the validity of a server certificate'),
   removeBrowserProfile: z.boolean().default(false).describe('Boolean indicating if the browser profile should be removed when quitting SEB'),
   removeLocalStorage: z.boolean().default(false).describe('Boolean indicating if the browser\'s local storage database should be disabled'),
-  
+
   // Network and proxy settings
   proxySettingsPolicy: z.number().int().min(0).max(1).default(0).describe('Integer with a value representing one of the proxySettingsPolicies: 0=useSystemProxySettings, 1=useSEBProxySettings'),
-  
+
   // Registry and configuration
   sebConfigPurpose: z.number().int().min(0).max(1).default(0).describe('Integer with a value representing one of the sebConfigPurposes: 0=StartingExam, 1=ConfiguringClient'),
   sebMode: z.number().int().min(0).max(2).default(0).describe('Integer with a value representing one of the sebModes: 0=Browser, 1=ConfigTool, 2=PendingUpdate'),
-  
+
   // Service policy
   sebServicePolicy: z.number().int().min(0).max(2).default(0).describe('Integer with a value representing one of the sebServicePolicies: 0=ignoreService, 1=indicateMissingService, 2=forceSebService'),
 });

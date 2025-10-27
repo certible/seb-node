@@ -1,8 +1,9 @@
-import { gzip } from 'node:zlib';
-import { promisify } from 'node:util';
-import { generatePlistXml } from './plist.js';
-import { sebConfigSchema, type SEBConfig } from './schema.js';
+import type { SEBConfig } from './schema.js';
 import crypto from 'node:crypto';
+import { promisify } from 'node:util';
+import { gzip } from 'node:zlib';
+import { generatePlistXml } from './plist.js';
+import { sebConfigSchema } from './schema.js';
 
 const gzipAsync = promisify(gzip);
 
@@ -44,11 +45,11 @@ export interface SEBGenerateResult {
 
 /**
  * Generate a SEB configuration file from a config object
- * 
+ *
  * @param config - The SEB configuration object
  * @param options - Generation options
  * @returns The generated SEB file data and metadata
- * 
+ *
  * @example
  * ```typescript
  * const result = await generateSEBConfig({
@@ -56,21 +57,22 @@ export interface SEBGenerateResult {
  *   allowQuit: false,
  *   browserViewMode: 1,
  * });
- * 
+ *
  * // Save to file
  * fs.writeFileSync('exam.seb', result.data);
  * ```
  */
 export async function generateSEBConfig(
   config: Partial<SEBConfig>,
-  options: SEBGenerateOptions = {}
+  options: SEBGenerateOptions = {},
 ): Promise<SEBGenerateResult> {
   const { encrypt = false, password, validate = true } = options;
 
   let validatedConfig: SEBConfig;
   if (validate) {
     validatedConfig = sebConfigSchema.parse(config);
-  } else {
+  }
+  else {
     validatedConfig = config as SEBConfig;
   }
 
@@ -80,7 +82,8 @@ export async function generateSEBConfig(
 
   if (encrypt && password) {
     compressedData = await generateEncryptedSEB(plistXml, password);
-  } else {
+  }
+  else {
     // Unencrypted mode (plain)
     compressedData = await generatePlainSEB(plistXml);
   }
@@ -94,7 +97,7 @@ export async function generateSEBConfig(
 
 /**
  * Generate an unencrypted (plain) SEB file
- * 
+ *
  * @param plistXml - The XML plist string
  * @returns The compressed SEB file data
  */
@@ -112,7 +115,7 @@ export async function generatePlainSEB(plistXml: string): Promise<Buffer> {
 
 /**
  * Generate an encrypted SEB file
- * 
+ *
  * @param plistXml - The XML plist string
  * @param password - The password to use for encryption
  * @returns The compressed and encrypted SEB file data

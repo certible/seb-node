@@ -1,11 +1,11 @@
-import { describe, it, expect } from 'vitest';
-import { generateSEBConfig, generatePlainSEB } from '../generator.js';
-import { gunzip } from 'zlib';
-import { promisify } from 'util';
+import { promisify } from 'node:util';
+import { gunzip } from 'node:zlib';
+import { describe, expect, it } from 'vitest';
+import { generatePlainSEB, generateSEBConfig } from '../generator.js';
 
 const gunzipAsync = promisify(gunzip);
 
-describe('SEB Config Generator', () => {
+describe('config generator', () => {
   describe('generateSEBConfig', () => {
     it('should generate a valid SEB config file', async () => {
       const config = {
@@ -93,7 +93,7 @@ describe('SEB Config Generator', () => {
     });
   });
 
-  describe('Full integration test', () => {
+  describe('full integration test', () => {
     it('should create a complete exam configuration', async () => {
       const appointmentId = 'exam-12345';
       const random = 'random-67890';

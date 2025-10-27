@@ -1,7 +1,7 @@
-import { describe, it, expect } from 'vitest';
+import { describe, expect, it } from 'vitest';
 import { sebConfigSchema } from '../schema.js';
 
-describe('SEB Config Schema', () => {
+describe('schema', () => {
   describe('sebConfigSchema', () => {
     it('should validate a minimal valid config', () => {
       const config = {

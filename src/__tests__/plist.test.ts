@@ -1,14 +1,14 @@
-import { describe, it, expect } from 'vitest';
-import { generatePlistXml, escapeXml, valueToXml, dictToXml } from '../plist.js';
+import { describe, expect, it } from 'vitest';
+import { dictToXml, escapeXml, generatePlistXml, valueToXml } from '../plist.js';
 
-describe('Plist Utilities', () => {
+describe('plist Utilities', () => {
   describe('escapeXml', () => {
     it('should escape special XML characters', () => {
       expect(escapeXml('a & b')).toBe('a &amp; b');
       expect(escapeXml('a < b')).toBe('a &lt; b');
       expect(escapeXml('a > b')).toBe('a &gt; b');
       expect(escapeXml('a "quote"')).toBe('a &quot;quote&quot;');
-      expect(escapeXml("a 'quote'")).toBe('a &apos;quote&apos;');
+      expect(escapeXml('a \'quote\'')).toBe('a &apos;quote&apos;');
     });
 
     it('should handle strings with multiple special characters', () => {
@@ -68,7 +68,7 @@ describe('Plist Utilities', () => {
     it('should convert simple dictionary', () => {
       const dict = { name: 'test', value: 42 };
       const result = dictToXml(dict);
-      
+
       expect(result).toContain('<dict>');
       expect(result).toContain('<key>name</key>');
       expect(result).toContain('<string>test</string>');
@@ -80,11 +80,11 @@ describe('Plist Utilities', () => {
     it('should sort keys alphabetically (case-insensitive)', () => {
       const dict = { zebra: 1, apple: 2, Banana: 3 };
       const result = dictToXml(dict);
-      
+
       const appleIndex = result.indexOf('apple');
       const bananaIndex = result.indexOf('Banana');
       const zebraIndex = result.indexOf('zebra');
-      
+
       expect(appleIndex).toBeLessThan(bananaIndex);
       expect(bananaIndex).toBeLessThan(zebraIndex);
     });
@@ -122,11 +122,11 @@ describe('Plist Utilities', () => {
       };
 
       const xml = generatePlistXml(config);
-      
+
       const appleIndex = xml.indexOf('apple');
       const middleIndex = xml.indexOf('middle');
       const zebraIndex = xml.indexOf('zebra');
-      
+
       expect(appleIndex).toBeLessThan(middleIndex);
       expect(middleIndex).toBeLessThan(zebraIndex);
     });

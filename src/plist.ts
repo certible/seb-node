@@ -25,7 +25,8 @@ export function valueToXml(value: unknown, indent: string = '\t'): string {
   if (typeof value === 'number') {
     if (Number.isInteger(value)) {
       return `<integer>${value}</integer>`;
-    } else {
+    }
+    else {
       return `<real>${value}</real>`;
     }
   }
@@ -49,7 +50,8 @@ export function valueToXml(value: unknown, indent: string = '\t'): string {
       // For array of dicts (like urlFilterRules), sort dict keys
       if (typeof item === 'object' && item !== null && !Array.isArray(item)) {
         items.push(`${indent}\t${dictToXml(item as Record<string, unknown>, `${indent}\t`)}`);
-      } else {
+      }
+      else {
         items.push(`${indent}\t${valueToXml(item, `${indent}\t`)}`);
       }
     }
@@ -80,7 +82,8 @@ export function dictToXml(obj: Record<string, unknown>, indent: string = '\t'): 
     const valueXml = valueToXml(obj[key], indent);
     if (valueXml.includes('\n')) {
       lines.push(valueXml);
-    } else {
+    }
+    else {
       lines.push(`${indent}${valueXml}`);
     }
   }
