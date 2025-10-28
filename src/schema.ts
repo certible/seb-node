@@ -206,7 +206,7 @@ export const sebConfigSchema = z.looseObject({
 
   /* required,partial hack to not apply defaults */
   /* see https://github.com/colinhacks/zod/issues/5235 */
-}).required().partial(); 
+}).required().partial();
 
 export type SEBConfig = z.infer<typeof sebConfigSchema>;
 export type URLFilterRule = z.infer<typeof urlFilterRuleSchema>;

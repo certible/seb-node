@@ -1,9 +1,9 @@
 import { promisify } from 'node:util';
 import { gunzip } from 'node:zlib';
-import { describe, expect, it } from 'vitest';
 import { parse as parsePlist } from 'fast-plist';
-import { decompressSEBFile, generateEncryptedSEB, generatePlainSEB, generateSEBConfig } from '../generator.js';
+import { describe, expect, it } from 'vitest';
 import { generateConfigKey } from '../config-key.js';
+import { decompressSEBFile, generateEncryptedSEB, generatePlainSEB, generateSEBConfig } from '../generator.js';
 
 const gunzipAsync = promisify(gunzip);
 
