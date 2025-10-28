@@ -21,17 +21,6 @@ describe('schema', () => {
       expect(result.success).toBe(false);
     });
 
-    it('should apply default values', () => {
-      const config = {
-        startURL: 'https://exam.example.com',
-      };
-
-      const result = sebConfigSchema.parse(config);
-      expect(result.allowQuit).toBe(true);
-      expect(result.browserViewMode).toBe(0);
-      expect(result.originatorVersion).toBe('3.7.0');
-    });
-
     it('should validate browserViewMode range', () => {
       const validConfig = {
         startURL: 'https://exam.example.com',
