@@ -4,7 +4,7 @@
   "version": "1.0.0",
   "description": "TypeScript library for creating Safe Exam Browser (SEB) configuration files and handling Config Keys (server-side and browser)",
   "author": "Certible <oberreiter@certible.com>",
-  "license": "MPL-2 License",
+  "license": "MPL-2.0",
   "homepage": "https://github.com/certible/seb-node#readme",
   "repository": {
     "type": "git",
