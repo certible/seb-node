@@ -149,3 +149,7 @@ MPL-2 License - see the [LICENSE](LICENSE) file for details.
 
 - [laravel-seb](https://github.com/ndum/laravel-seb) - Laravel package for SEB integration
 - [Safe Exam Browser](https://safeexambrowser.org/) - Official SEB website
+
+## About
+
+This package is developed and maintained by **[Certible](https://certible.com)**.
