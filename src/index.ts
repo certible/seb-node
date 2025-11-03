@@ -1,10 +1,11 @@
+export { removeURLFragment } from './config-key-shared.js';
 export {
   convertToSEBJSON,
   generateConfigKey,
   generateConfigKeyHash,
-  removeURLFragment,
   verifyConfigKeyHash,
 } from './config-key.js';
+
 export type { SEBConfigObject } from './config-key.js';
 
 export {

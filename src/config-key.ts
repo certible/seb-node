@@ -4,6 +4,7 @@
  */
 
 import { createHash } from 'node:crypto';
+import { removeURLFragment } from './config-key-shared.js';
 
 export interface SEBConfigObject {
   [key: string]: unknown;
@@ -157,11 +158,4 @@ export function generateConfigKeyHash(url: string, configKey: string): string {
 export function verifyConfigKeyHash(url: string, configKey: string, receivedHash: string): boolean {
   const expectedHash = generateConfigKeyHash(url, configKey);
   return expectedHash.toLowerCase() === receivedHash.toLowerCase();
-}
-
-/**
- * Utility function, removes the fragment (part after #) from a URL
- */
-export function removeURLFragment(url: string): string {
-  return url.split('#')[0];
 }

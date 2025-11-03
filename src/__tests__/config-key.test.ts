@@ -1,9 +1,9 @@
 import { describe, expect, it } from 'vitest';
+import { removeURLFragment } from '../config-key-shared.js';
 import {
   convertToSEBJSON,
   generateConfigKey,
   generateConfigKeyHash,
-  removeURLFragment,
   verifyConfigKeyHash,
 } from '../config-key.js';
 

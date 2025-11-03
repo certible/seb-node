@@ -9,7 +9,10 @@ export {
 export type { SafeExamBrowser, SEBKeys } from './browser.js';
 
 export {
-  generateConfigKeyHash,
   removeURLFragment,
+} from './config-key-shared.js';
+
+export {
+  generateConfigKeyHash,
   verifyConfigKeyHash,
-} from './config-key.js';
+} from './config-key-web.js';
