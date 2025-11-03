@@ -4,7 +4,7 @@
  * @see https://safeexambrowser.org/developer/seb-config-key.html
  */
 
-import { removeURLFragment } from "./config-key-shared.js";
+import { removeURLFragment } from './config-key-shared.js';
 
 /**
  * Creates SHA-256 hash using Web Crypto API

@@ -1,11 +1,11 @@
 import { describe, expect, it } from 'vitest';
+import { removeURLFragment } from '../config-key-shared.js';
 import {
   convertToSEBJSON,
   generateConfigKey,
   generateConfigKeyHash,
   verifyConfigKeyHash,
 } from '../config-key.js';
-import { removeURLFragment } from '../config-key-shared.js';
 
 describe('config-key', () => {
   describe('removeURLFragment', () => {

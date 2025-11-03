@@ -1,6 +1,6 @@
-import { describe, expect, it, vi } from 'vitest';
-import { generateConfigKeyHash, verifyConfigKeyHash } from '../config-key-web.js';
+import { describe, expect, it } from 'vitest';
 import { removeURLFragment } from '../config-key-shared.js';
+import { generateConfigKeyHash, verifyConfigKeyHash } from '../config-key-web.js';
 
 // Mock Web Crypto API for Node.js test environment
 const mockCrypto = {
@@ -15,7 +15,7 @@ const mockCrypto = {
 };
 
 // Setup global crypto mock
-global.window = {
+globalThis.window = {
   crypto: mockCrypto,
 } as any;
 
@@ -38,13 +38,13 @@ describe('config-key-web', () => {
     it('generates correct hash for URL and config key', async () => {
       const url = 'https://exam.example.com/quiz/1';
       const configKey = 'abc123def456';
-      
+
       const hash = await generateConfigKeyHash(url, configKey);
-      
+
       // Hash should be a 64-character hex string
       expect(hash).toHaveLength(64);
       expect(hash).toMatch(/^[a-f0-9]{64}$/);
-      
+
       // Verify it's deterministic (same input produces same output)
       const hash2 = await generateConfigKeyHash(url, configKey);
       expect(hash).toBe(hash2);
@@ -54,28 +54,28 @@ describe('config-key-web', () => {
       const urlWithFragment = 'https://exam.example.com/quiz/1#section2';
       const urlWithoutFragment = 'https://exam.example.com/quiz/1';
       const configKey = 'abc123def456';
-      
+
       const hash1 = await generateConfigKeyHash(urlWithFragment, configKey);
       const hash2 = await generateConfigKeyHash(urlWithoutFragment, configKey);
-      
+
       expect(hash1).toBe(hash2);
     });
 
     it('produces different hashes for different URLs', async () => {
       const configKey = 'abc123def456';
-      
+
       const hash1 = await generateConfigKeyHash('https://example.com/page1', configKey);
       const hash2 = await generateConfigKeyHash('https://example.com/page2', configKey);
-      
+
       expect(hash1).not.toBe(hash2);
     });
 
     it('produces different hashes for different config keys', async () => {
       const url = 'https://exam.example.com/quiz/1';
-      
+
       const hash1 = await generateConfigKeyHash(url, 'key1');
       const hash2 = await generateConfigKeyHash(url, 'key2');
-      
+
       expect(hash1).not.toBe(hash2);
     });
   });
@@ -85,9 +85,9 @@ describe('config-key-web', () => {
       const url = 'https://exam.example.com/quiz/1';
       const configKey = 'abc123def456';
       const hash = await generateConfigKeyHash(url, configKey);
-      
+
       const isValid = await verifyConfigKeyHash(url, configKey, hash);
-      
+
       expect(isValid).toBe(true);
     });
 
@@ -95,9 +95,9 @@ describe('config-key-web', () => {
       const url = 'https://exam.example.com/quiz/1';
       const configKey = 'abc123def456';
       const wrongHash = 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa';
-      
+
       const isValid = await verifyConfigKeyHash(url, configKey, wrongHash);
-      
+
       expect(isValid).toBe(false);
     });
 
@@ -106,9 +106,9 @@ describe('config-key-web', () => {
       const configKey = 'abc123def456';
       const hash = await generateConfigKeyHash(url, configKey);
       const upperHash = hash.toUpperCase();
-      
+
       const isValid = await verifyConfigKeyHash(url, configKey, upperHash);
-      
+
       expect(isValid).toBe(true);
     });
 
@@ -117,23 +117,23 @@ describe('config-key-web', () => {
       const urlWithoutFragment = 'https://exam.example.com/quiz/1';
       const configKey = 'abc123def456';
       const hash = await generateConfigKeyHash(urlWithoutFragment, configKey);
-      
+
       const isValid = await verifyConfigKeyHash(urlWithFragment, configKey, hash);
-      
+
       expect(isValid).toBe(true);
     });
   });
 
-  describe('Web Crypto API availability', () => {
+  describe('web Crypto API availability', () => {
     it('throws error when crypto is not available', async () => {
-      const originalWindow = global.window;
-      global.window = undefined as any;
+      const originalWindow = globalThis.window;
+      globalThis.window = undefined as any;
 
       await expect(generateConfigKeyHash('https://example.com', 'key')).rejects.toThrow(
-        'Web Crypto API is not available in this environment'
+        'Web Crypto API is not available in this environment',
       );
 
-      global.window = originalWindow;
+      globalThis.window = originalWindow;
     });
   });
 });
