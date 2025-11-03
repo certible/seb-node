@@ -3,9 +3,9 @@ import {
   convertToSEBJSON,
   generateConfigKey,
   generateConfigKeyHash,
-  removeURLFragment,
   verifyConfigKeyHash,
 } from '../config-key.js';
+import { removeURLFragment } from '../config-key-shared.js';
 
 describe('config-key', () => {
   describe('removeURLFragment', () => {
