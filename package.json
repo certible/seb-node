@@ -1,7 +1,7 @@
 {
   "name": "@certible/seb-node",
   "type": "module",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "TypeScript library for creating Safe Exam Browser (SEB) configuration files and handling Config Keys (server-side and browser)",
   "author": "Certible <oberreiter@certible.com>",
   "license": "MPL-2.0",
