@@ -167,7 +167,7 @@ describe('config-key', () => {
         startURL: 'https://exam.example.com',
         allowQuit: false,
         browserViewMode: 1,
-        urlFilterRules: [
+        URLFilterRules: [
           {
             active: true,
             expression: 'example.com',
@@ -185,10 +185,10 @@ describe('config-key', () => {
       expect(json).toContain('startURL');
       expect(json).toContain('allowQuit');
       expect(json).toContain('browserViewMode');
-      expect(json).toContain('urlFilterRules');
+      expect(json).toContain('URLFilterRules');
 
       // Should be alphabetically sorted at root level
-      const keys = ['additionalResources', 'allowQuit', 'browserViewMode', 'startURL', 'urlFilterRules'];
+      const keys = ['additionalResources', 'allowQuit', 'browserViewMode', 'startURL', 'URLFilterRules'];
       let lastIndex = -1;
       for (const key of keys) {
         const index = json.indexOf(`"${key}"`);
@@ -378,8 +378,8 @@ describe('config-key', () => {
         startURL: 'https://exam.university.edu/quiz/123',
         allowQuit: false,
         browserViewMode: 1,
-        enableURLFilter: true,
-        urlFilterRules: [
+        URLFilterEnable: true,
+        URLFilterRules: [
           {
             active: true,
             expression: 'university.edu',

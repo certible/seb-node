@@ -49,6 +49,7 @@ export interface SEBGenerateResult {
  *
  * @param config - The SEB configuration object
  * @param options - Generation options
+ * @param looseConfig - Additional loose configuration to merge into the validated config
  * @returns The generated SEB file data and metadata
  *
  * @example
@@ -66,15 +67,24 @@ export interface SEBGenerateResult {
 export async function generateSEBConfig(
   config: SEBConfig,
   options: SEBGenerateOptions = {},
+  looseConfig: Record<string, unknown> | undefined = undefined,
 ): Promise<SEBGenerateResult> {
   const { encrypt = false, password, validate = true } = options;
 
   let validatedConfig: SEBConfig;
   if (validate) {
-    validatedConfig = sebConfigSchema.parse(config);
+    const content = sebConfigSchema.safeParse(config);
+    if (!content.success) {
+      throw new Error(`Invalid SEB configuration: ${content.error.message}`);
+    }
+    validatedConfig = content.data;
   }
   else {
     validatedConfig = config as SEBConfig;
+  }
+
+  if (looseConfig && looseConfig instanceof Object) {
+    Object.assign(validatedConfig, looseConfig);
   }
 
   const plistXml = generatePlistXml(validatedConfig as unknown as Record<string, unknown>);

@@ -23,8 +23,8 @@ const result = await generateSEBConfig({
   startURL: 'https://exam.example.com',
   allowQuit: false,
   browserViewMode: 1, // Fullscreen
-  enableURLFilter: true,
-  urlFilterRules: [
+  URLFilterEnable: true,
+  URLFilterRules: [
     {
       active: true,
       expression: 'example.com',
