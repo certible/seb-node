@@ -1,5 +1,5 @@
 /**
- * Import from '@certible/seb-config/web' in browser/client-side code
+ * Import from '@certible/seb-node/web' in browser/client-side code
  */
 export {
   getSEBKeys,
