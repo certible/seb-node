@@ -24,6 +24,15 @@ const additionalResourceSchema = z.object({
   resourceDataLauncher: z.string().optional(),
 });
 
+// Embedded Certificate Schema
+const embeddedCertificateSchema = z.object({
+  certificateData: z.instanceof(Buffer).optional().describe('Data of the certificate/identity. Should no longer be used, was replaced with certificateDataBase64'),
+  certificateDataBase64: z.string().optional().describe('String with Base64 encoded data of the TLS/SSL certificate. Identities are only saved as certificateData'),
+  certificateDataWin: z.string().optional().describe('String with Base64 encoded data of the TLS/SSL certificate. This key is deprecated and only in use for certificate type certificateTypeSSLServer Certificate for downwards compatibility to SEB Windows versions < 2.2'),
+  name: z.string().describe('String containing the name of the certificate/identity. The name might be just the common name, the Email address, a combination of both and the public key hash value'),
+  type: z.int().min(0).max(3).describe('Integer with a value representing the type of the certificate: 0=certificateTypeSSL, 1=certificateTypeIdentity, 2=certificateTypeCA, 3=certificateTypeSSLDebug'),
+});
+
 const processSchema = z.object({
   active: z.boolean().default(true).describe('Boolean indicating if the prohibited process is active'),
   currentUser: z.boolean().default(true).describe('Boolean indicating that the prohibited process has to run under the currently logged in user (not system users)'),
@@ -263,7 +272,7 @@ export const sebConfigSchema = z.object({
 
   // Certificate and encryption
   pinEmbeddedCertificates: z.boolean().default(false).describe('Boolean indicating if the certificate store should not be used to evaluate the validity of a server certificate'),
-  embeddedCertificates: z.array(z.string()).default([]).describe('Array of embedded certificates'),
+  embeddedCertificates: z.array(embeddedCertificateSchema).default([]).describe('Array of dictionaries which contain SSL client certificates and cryptographic identities with their properties which are embedded into settings. When SEB loads a .seb settings file with embedded certificates or identities, then it installs them into the macOS Keychain or into the XULRunner certificate database (TLS/SSL server certificates) or Windows Certificate Store (identities)'),
 
   // Platform version requirements
   allowMacOSVersionNumberCheckFull: z.boolean().default(false).describe('Boolean indicating if full macOS version number checking is allowed'),
@@ -585,5 +594,6 @@ export const sebConfigSchema = z.object({
 export type SEBConfig = z.infer<typeof sebConfigSchema>;
 export type URLFilterRule = z.infer<typeof urlFilterRuleSchema>;
 export type AdditionalResource = z.infer<typeof additionalResourceSchema>;
+export type EmbeddedCertificate = z.infer<typeof embeddedCertificateSchema>;
 export type Process = z.infer<typeof processSchema>;
 export type PermittedProcess = z.infer<typeof permittedProcessSchema>;
