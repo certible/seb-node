@@ -1,11 +1,11 @@
-# @certible/seb-config
+# @certible/seb-node
 
 A TypeScript library for creating Safe Exam Browser (SEB) configuration files and working with SEB Config Keys.
 
 ## Installation
 
 ```bash
-npm install @certible/seb-config
+npm install @certible/seb-node
 ```
 
 ## Usage
@@ -16,7 +16,7 @@ Import from the main package for server-side operations:
 
 ```typescript
 import { writeFileSync } from 'node:fs';
-import { generateSEBConfig } from '@certible/seb-config';
+import { generateSEBConfig } from '@certible/seb-node';
 
 // Create a basic SEB configuration
 const result = await generateSEBConfig({
@@ -78,7 +78,7 @@ The Config Key feature allows exam systems to verify that SEB clients are using 
 ### Server-side: Generate Config Key
 
 ```typescript
-import { generateConfigKey } from '@certible/seb-config';
+import { generateConfigKey } from '@certible/seb-node';
 
 const config = {
   startURL: 'https://exam.example.com',
@@ -98,7 +98,7 @@ console.log('Config Key:', configKey);
 When SEB sends requests, it includes the Config Key hash in the `X-SafeExamBrowser-ConfigKeyHash` header:
 
 ```typescript
-import { verifyConfigKeyHash } from '@certible/seb-config';
+import { verifyConfigKeyHash } from '@certible/seb-node';
 
 app.get('/exam', (req, res) => {
   const configKey = '81aad4ab9dfd447cc479e6a4a7c9a544e2cafc7f3adeb68b2a21efad68eca4dc';
@@ -114,7 +114,7 @@ app.get('/exam', (req, res) => {
 In your web application running inside SEB, import from the `/web` export:
 
 ```typescript
-import { getSEBKeys, isSEBAvailable } from '@certible/seb-config/web';
+import { getSEBKeys, isSEBAvailable } from '@certible/seb-node/web';
 
 const keys = getSEBKeys();
 
@@ -129,10 +129,10 @@ if (keys.isAvailable) {
 
 ```typescript
 // Server-side: Main package
-import { generateConfigKey, generateSEBConfig, verifyConfigKeyHash } from '@certible/seb-config';
+import { generateConfigKey, generateSEBConfig, verifyConfigKeyHash } from '@certible/seb-node';
 
 // Client-side: Web export (smaller bundle, browser-only code)
-import { getSEBKeys, isSEBAvailable } from '@certible/seb-config/web';
+import { getSEBKeys, isSEBAvailable } from '@certible/seb-node/web';
 ```
 
 ## Resources
