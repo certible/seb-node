@@ -7,7 +7,7 @@ const urlFilterRuleSchema = z.object({
   active: z.boolean().default(true).describe('Boolean indicating if the action is active'),
   regex: z.boolean().default(false).describe('Boolean indicating if the action rule is a regular expression. If regex is set to false, then the rule is formatted using the wildcard * (stands for an arbitrary string of any length)'),
   expression: z.string().describe('String containing the filtering expression or pattern, either in the regular expression format (regex = true) or (regex = false) a simpler filter expression containing the wildcard char <*>'),
-  action: z.number().int().min(0).max(2).default(1).describe('Integer with a value representing one of the URLFilterRuleActions: 0=Block, 1=Allow, 2=Skip'),
+  action: z.int().min(0).max(2).default(1).describe('Integer with a value representing one of the URLFilterRuleActions: 0=Block, 1=Allow, 2=Skip'),
 });
 
 // Additional Resource Schema
@@ -29,7 +29,7 @@ const processSchema = z.object({
   currentUser: z.boolean().default(true).describe('Boolean indicating that the prohibited process has to run under the currently logged in user (not system users)'),
   executable: z.string().describe('String of the process name (usually the file name of the executable)'),
   identifier: z.string().optional().describe('String of the process identifier in reverse domain notation (Mac) or the string or substring of the main window title of a process'),
-  os: z.number().int().min(0).max(2).default(0).describe('Integer with a value representing on which operating system the permitted process runs: 0=Win, 1=Mac, 2=All'),
+  os: z.int().min(0).max(2).default(0).describe('Integer with a value representing on which operating system the permitted process runs: 0=Win, 1=Mac, 2=All'),
   originalName: z.string().optional().describe('String containing the original filename meta data of the executable (only available in Windows)'),
   description: z.string().optional().describe('String containing a description of the process. This is only displayed in the SEB configuration tool, preferences window and in logs'),
   strongKill: z.boolean().default(false).describe('Boolean indicating whether an application (or process) may be killed in a not-nice way, what may cause data loss'),
@@ -70,15 +70,16 @@ export const sebConfigSchema = z.object({
 
   // Configuration settings
   allowPreferencesWindow: z.boolean().default(false).describe('Boolean indicating if users are allowed to open the preferences window on exam clients'),
+  sebConfigPurpose: z.int().min(0).max(2).default(0).describe('Integer with a value representing one of the sebConfigPurposes: 0=StartingExam, 1=ConfiguringSEB, 2=AdministeringSEB'),
 
   // ==================================================================================
   // USER INTERFACE / APPEARANCE
   // ==================================================================================
 
   // Browser window and view settings
-  browserViewMode: z.number().int().min(0).max(1).default(0).describe('Integer with a value representing one of the browserViewModes: 0=Window, 1=Fullscreen'),
+  browserViewMode: z.int().min(0).max(1).default(0).describe('Integer with a value representing one of the browserViewModes: 0=Window, 1=Fullscreen'),
   mainBrowserWindowHeight: z.string().default('').describe('String representing the height of the main browser window'),
-  mainBrowserWindowPositioning: z.number().int().default(0).describe('Integer representing the positioning of the main browser window'),
+  mainBrowserWindowPositioning: z.int().default(0).describe('Integer representing the positioning of the main browser window'),
   mainBrowserWindowWidth: z.string().default('').describe('String representing the width of the main browser window'),
 
   // Toolbar and navigation display
@@ -96,7 +97,7 @@ export const sebConfigSchema = z.object({
   touchOptimized: z.boolean().default(false).describe('Boolean indicating touch optimized appearance'),
   browserScreenKeyboard: z.boolean().default(false).describe(''),
   enableTouchExit: z.boolean().default(false).describe('Boolean indicating if touch exit is enabled'),
-  oskBehavior: z.number().int().default(0).describe('Integer representing the on-screen keyboard behavior'),
+  oskBehavior: z.int().default(0).describe('Integer representing the on-screen keyboard behavior'),
 
   // ==================================================================================
   // BROWSER SETTINGS
@@ -104,7 +105,7 @@ export const sebConfigSchema = z.object({
 
   // Browser engine and core functionality
   enableSebBrowser: z.boolean().default(true).describe('Boolean indicating if the SEB browser should be used'),
-  browserWindowWebView: z.number().int().min(0).max(4).default(3).describe('Integer with a value representing the browser engine to use, 3 - Prefer Modern WebView, 4 - Force Modern WebView is needed for config key to work.'),
+  browserWindowWebView: z.int().min(0).max(4).default(3).describe('Integer with a value representing the browser engine to use, 3 - Prefer Modern WebView, 4 - Force Modern WebView is needed for config key to work.'),
 
   // Page reload and navigation
   browserWindowAllowReload: z.boolean().default(true).describe('Boolean indicating if reload is allowed in main browser window'),
@@ -113,22 +114,22 @@ export const sebConfigSchema = z.object({
   allowBrowsingBackForward: z.boolean().default(false).describe('Boolean indicating if browsing back to previously visited pages (and forward again) according to the browser history is allowed'),
 
   // New window policies
-  newBrowserWindowByLinkPolicy: z.number().int().min(0).max(3).default(2).describe('Integer with a value representing one of the newBrowserWindowPolicies: 0=getGenerallyBlocked, 1=openInSameWindow, 2=openInNewWindow'),
-  newBrowserWindowByScriptPolicy: z.number().int().min(0).max(3).default(2).describe('Integer with a value representing one of the newBrowserWindowPolicies for hyperlinks opened from JavaScript or plug-ins'),
+  newBrowserWindowByLinkPolicy: z.int().min(0).max(3).default(2).describe('Integer with a value representing one of the newBrowserWindowPolicies: 0=getGenerallyBlocked, 1=openInSameWindow, 2=openInNewWindow'),
+  newBrowserWindowByScriptPolicy: z.int().min(0).max(3).default(2).describe('Integer with a value representing one of the newBrowserWindowPolicies for hyperlinks opened from JavaScript or plug-ins'),
   newBrowserWindowAllowReload: z.boolean().default(true).describe('Boolean indicating if reload is allowed in additional browser windows'),
   newBrowserWindowNavigation: z.boolean().default(true).describe('Boolean indicating if browsing back to previously visited pages is allowed in additional browser windows'),
   newBrowserWindowShowReloadWarning: z.boolean().default(false).describe('Boolean indicating if a warning should be displayed before reloading the web page in an additional browser window'),
   newBrowserWindowAllowAddressBar: z.boolean().default(false).describe('Boolean indicating if additional browser windows should have an address bar'),
   newBrowserWindowByLinkBlockForeign: z.boolean().default(false).describe('Boolean indicating if links to foreign domains should be blocked in new windows'),
   newBrowserWindowByLinkHeight: z.string().default('').describe('String representing the height of new browser windows opened by links'),
-  newBrowserWindowByLinkPositioning: z.number().int().default(0).describe('Integer representing the positioning of new browser windows opened by links'),
+  newBrowserWindowByLinkPositioning: z.int().default(0).describe('Integer representing the positioning of new browser windows opened by links'),
   newBrowserWindowByLinkWidth: z.string().default('').describe('String representing the width of new browser windows opened by links'),
   newBrowserWindowByScriptBlockForeign: z.boolean().default(false).describe('Boolean indicating if scripts opening foreign domains should be blocked'),
-  newBrowserWindowShowURL: z.number().int().default(0).describe('Integer representing how URLs should be shown in new browser windows'),
+  newBrowserWindowShowURL: z.int().default(0).describe('Integer representing how URLs should be shown in new browser windows'),
 
   // Pop-up and window management
   blockPopUpWindows: z.boolean().default(false).describe('Boolean indicating if pop-up windows (often advertisement) opened by JavaScript without an user action such as a button click are blocked'),
-  browserWindowShowURL: z.number().int().default(0).describe('Integer representing how URLs should be shown in browser windows'),
+  browserWindowShowURL: z.int().default(0).describe('Integer representing how URLs should be shown in browser windows'),
   browserWindowTitleSuffix: z.string().default('').describe('String suffix to be appended to browser window titles'),
 
   // Web technologies and plugins
@@ -150,15 +151,15 @@ export const sebConfigSchema = z.object({
 
   // User agent settings
   browserUserAgent: z.string().optional().describe('String suffix which is appended to the current user agent'),
-  browserUserAgentMac: z.number().int().optional().describe('Integer with a value representing one browserUserAgentModeMac'),
+  browserUserAgentMac: z.int().optional().describe('Integer with a value representing one browserUserAgentModeMac'),
   browserUserAgentMacCustom: z.string().default('').describe('Custom user agent string for macOS'),
-  browserUserAgentWin: z.number().int().optional().describe('Integer with a value representing one browserUserAgentModeWin'),
-  browserUserAgentWinDesktopMode: z.number().int().default(0).describe('Integer representing the Windows desktop mode user agent'),
+  browserUserAgentWin: z.int().optional().describe('Integer with a value representing one browserUserAgentModeWin'),
+  browserUserAgentWinDesktopMode: z.int().default(0).describe('Integer representing the Windows desktop mode user agent'),
   browserUserAgentWinDesktopModeCustom: z.string().default('').describe('Custom user agent string for Windows desktop mode'),
-  browserUserAgentWinTouchMode: z.number().int().default(0).describe('Integer representing the Windows touch mode user agent'),
+  browserUserAgentWinTouchMode: z.int().default(0).describe('Integer representing the Windows touch mode user agent'),
   browserUserAgentWinTouchModeCustom: z.string().default('').describe('Custom user agent string for Windows touch mode'),
   browserUserAgentWinTouchModeIPad: z.string().default('').describe('iPad-specific user agent string for Windows touch mode'),
-  browserUserAgentiOS: z.number().int().default(0).describe('Integer representing the iOS user agent mode'),
+  browserUserAgentiOS: z.int().default(0).describe('Integer representing the iOS user agent mode'),
   browserUserAgentiOSCustom: z.string().default('').describe('Custom user agent string for iOS'),
 
   // Media and content handling
@@ -176,7 +177,7 @@ export const sebConfigSchema = z.object({
   // Page and text zoom
   enableZoomPage: z.boolean().default(true).describe('Boolean indicating if pages can be zoomed'),
   enableZoomText: z.boolean().default(true).describe('Boolean indicating if text in browser windows can be zoomed'),
-  zoomMode: z.number().int().min(0).max(2).default(0).describe('Integer with a value representing one of the SEBZoomModes: 0=Page, 1=Text'),
+  zoomMode: z.int().min(0).max(2).default(0).describe('Integer with a value representing one of the SEBZoomModes: 0=Page, 1=Text'),
   defaultPageZoomLevel: z.number().default(1).describe('Default zoom level for pages'),
   defaultTextZoomLevel: z.number().default(1).describe('Default zoom level for text'),
 
@@ -202,7 +203,7 @@ export const sebConfigSchema = z.object({
   allowWlan: z.boolean().default(false).describe('Boolean indicating if the WLAN control should be displayed in the SEB task bar'),
 
   // Proxy settings
-  proxySettingsPolicy: z.number().int().min(0).max(1).default(0).describe('Integer with a value representing one of the proxySettingsPolicies: 0=useSystemProxySettings, 1=useSEBProxySettings'),
+  proxySettingsPolicy: z.int().min(0).max(1).default(0).describe('Integer with a value representing one of the proxySettingsPolicies: 0=useSystemProxySettings, 1=useSEBProxySettings'),
 
   // ==================================================================================
   // AUDIO SETTINGS
@@ -211,7 +212,7 @@ export const sebConfigSchema = z.object({
   audioControlEnabled: z.boolean().default(false).describe('Boolean indicating if the audio control should be displayed in the SEB task bar'),
   audioMute: z.boolean().default(false).describe('Boolean indicating if audio should be muted when the SEB session is started'),
   audioSetVolumeLevel: z.boolean().default(false).describe('Boolean indicating if the audio volume level should be set to the value of audioVolumeLevel when the SEB session is started'),
-  audioVolumeLevel: z.number().int().min(0).max(100).default(25).describe('Integer indicating the initial audio level (in percent) when the SEB session is started'),
+  audioVolumeLevel: z.int().min(0).max(100).default(25).describe('Integer indicating the initial audio level (in percent) when the SEB session is started'),
 
   // ==================================================================================
   // SECURITY AND SYSTEM SETTINGS
@@ -223,6 +224,7 @@ export const sebConfigSchema = z.object({
   allowSiri: z.boolean().default(false).describe('Boolean indicating if Siri is allowed to be used'),
   allowDictation: z.boolean().default(false).describe('Boolean indicating if it is allowed to use dictation (speech-to-text)'),
   allowAirPlay: z.boolean().default(false).describe('Boolean indicating if AirPlay is allowed'),
+  screenSharingMacEnforceBlocked: z.boolean().default(false).describe('Boolean indicating if screen sharing should be enforced to be blocked on macOS, which overrides the original screen sharing setting'),
 
   // System and application control
   allowSwitchToApplications: z.boolean().default(false).describe('Boolean indicating if users are allowed to switch to permitted applications'),
@@ -230,11 +232,34 @@ export const sebConfigSchema = z.object({
   allowVirtualMachine: z.boolean().default(false).describe('Boolean indicating if SEB is allowed to run on a virtual machine or not'),
 
   // Security policies
-  sebServicePolicy: z.number().int().min(0).max(2).default(0).describe('Integer with a value representing one of the sebServicePolicies: 0=ignoreService, 1=indicateMissingService, 2=forceSebService'),
+  sebServicePolicy: z.int().min(0).max(2).default(1).describe('Integer with a value representing one of the sebServicePolicies: 0=ignoreService, 1=indicateMissingService, 2=forceSebService'),
+  sebServiceIgnore: z.boolean().default(true).describe('Boolean indicating if SEB service should be ignored'),
   detectStoppedProcess: z.boolean().default(true).describe('Boolean indicating that it should be detected if the SEB process is stopped'),
   enableAppSwitcherCheck: z.boolean().default(true).describe('Boolean indicating whether SEB checks for the command key being held down while SEB is starting up'),
   forceAppFolderInstall: z.boolean().default(true).describe('Boolean indicating if SEB enforces to be installed in an Applications folder'),
   allowUserAppFolderInstall: z.boolean().default(false).describe('Boolean indicating if SEB is allowed to be installed in user-specific application folders'),
+
+  // SEB Server Configuration
+  sebMode: z.int().min(0).max(1).default(0).describe('Integer indicating the SEB mode. 0 = use local settings and load the start URL, 1 = connect to the SEB server'),
+  sebServerConfiguration: z.object({
+    apiDiscovery: z.string().default('').describe('String containing the API discovery endpoint for SEB server'),
+    clientName: z.string().default('').describe('String containing the client name for SEB server'),
+    clientSecret: z.string().default('').describe('String containing the client secret for SEB server'),
+    institution: z.string().default('').describe('String containing the institution name for SEB server'),
+    pingInterval: z.int().default(1000).describe('Integer indicating the ping interval for SEB server in milliseconds'),
+  }).default({
+    apiDiscovery: '',
+    clientName: '',
+    clientSecret: '',
+    institution: '',
+    pingInterval: 1000,
+  }).describe('Dictionary containing SEB server configuration'),
+  sebServerFallback: z.boolean().default(false).describe('Boolean indicating if SEB server fallback is enabled'),
+  sebServerFallbackAttemptInterval: z.int().default(2000).describe('Integer indicating the attempt interval for SEB server fallback in milliseconds'),
+  sebServerFallbackAttempts: z.int().default(5).describe('Integer indicating the number of fallback attempts for SEB server'),
+  sebServerFallbackPasswordHash: z.string().default('').describe('String containing the password hash for SEB server fallback'),
+  sebServerFallbackTimeout: z.int().default(30000).describe('Integer indicating the timeout for SEB server fallback in milliseconds'),
+  sebServerURL: z.string().default('').describe('String containing the URL for SEB server'),
 
   // Certificate and encryption
   pinEmbeddedCertificates: z.boolean().default(false).describe('Boolean indicating if the certificate store should not be used to evaluate the validity of a server certificate'),
@@ -242,14 +267,14 @@ export const sebConfigSchema = z.object({
 
   // Platform version requirements
   allowMacOSVersionNumberCheckFull: z.boolean().default(false).describe('Boolean indicating if full macOS version number checking is allowed'),
-  allowMacOSVersionNumberMajor: z.number().int().default(0).describe('Major version number for allowed macOS versions'),
-  allowMacOSVersionNumberMinor: z.number().int().default(0).describe('Minor version number for allowed macOS versions'),
-  allowMacOSVersionNumberPatch: z.number().int().default(0).describe('Patch version number for allowed macOS versions'),
-  allowiOSBetaVersionNumber: z.number().int().default(0).describe('Allowed iOS beta version number'),
-  allowiOSVersionNumberMajor: z.number().int().default(0).describe('Major version number for allowed iOS versions'),
-  allowiOSVersionNumberMinor: z.number().int().default(0).describe('Minor version number for allowed iOS versions'),
-  allowiOSVersionNumberPatch: z.number().int().default(0).describe('Patch version number for allowed iOS versions'),
-  minMacOSVersion: z.number().int().default(0).describe('Minimum required macOS version'),
+  allowMacOSVersionNumberMajor: z.int().default(0).describe('Major version number for allowed macOS versions'),
+  allowMacOSVersionNumberMinor: z.int().default(0).describe('Minor version number for allowed macOS versions'),
+  allowMacOSVersionNumberPatch: z.int().default(0).describe('Patch version number for allowed macOS versions'),
+  allowiOSBetaVersionNumber: z.int().default(0).describe('Allowed iOS beta version number'),
+  allowiOSVersionNumberMajor: z.int().default(0).describe('Major version number for allowed iOS versions'),
+  allowiOSVersionNumberMinor: z.int().default(0).describe('Minor version number for allowed iOS versions'),
+  allowiOSVersionNumberPatch: z.int().default(0).describe('Patch version number for allowed iOS versions'),
+  minMacOSVersion: z.int().default(0).describe('Minimum required macOS version'),
 
   // Windows specific security
   createNewDesktop: z.boolean().default(true).describe('Boolean indicating if SEB should be executed in a newly created desktop window'),
@@ -275,7 +300,7 @@ export const sebConfigSchema = z.object({
   downloadAndOpenSebConfig: z.boolean().default(true).describe('Boolean indicating if .seb config files should be downloaded and opened, regardless if downloading and opening of other file types is allowed or not'),
   downloadPDFFiles: z.boolean().default(false).describe('Boolean indicating if PDF files should be downloaded or displayed online inside the browser window'),
   allowPDFReaderToolbar: z.boolean().default(false).describe('Boolean indicating whether the toolbar of the internal PDF reader is enabled'),
-  chooseFileToUploadPolicy: z.number().int().default(0).describe('Integer representing the policy for choosing files to upload'),
+  chooseFileToUploadPolicy: z.int().default(0).describe('Integer representing the policy for choosing files to upload'),
   downloadFileTypes: z.array(z.string()).default([]).describe('Array of allowed file types for downloads'),
 
   // File access permissions
@@ -316,7 +341,7 @@ export const sebConfigSchema = z.object({
   // ==================================================================================
 
   // Display settings
-  allowedDisplaysMaxNumber: z.number().int().min(1).default(1).describe('Integer value indicating the maximum allowed number of connected displays'),
+  allowedDisplaysMaxNumber: z.int().min(1).default(1).describe('Integer value indicating the maximum allowed number of connected displays'),
   allowedDisplayBuiltin: z.boolean().default(true).describe('Boolean indicating if the built-in display should be used when only one display is allowed'),
   allowedDisplayBuiltinEnforce: z.boolean().default(false).describe('Boolean indicating if the built-in display should be enforced'),
   allowedDisplayBuiltinExceptDesktop: z.boolean().default(false).describe('Boolean indicating if built-in display is allowed except for desktop'),
@@ -328,11 +353,11 @@ export const sebConfigSchema = z.object({
   batteryChargeThresholdLow: z.number().default(0.2).describe('Low battery charge threshold'),
 
   // Accessibility features
-  accessibilityFeatureAssistiveTouch: z.number().int().default(0).describe('Assistive touch accessibility feature setting'),
-  accessibilityFeatureGrayscaleDisplay: z.number().int().default(0).describe('Grayscale display accessibility feature setting'),
-  accessibilityFeatureInvertColors: z.number().int().default(0).describe('Invert colors accessibility feature setting'),
-  accessibilityFeatureVoiceOver: z.number().int().default(0).describe('VoiceOver accessibility feature setting'),
-  accessibilityFeatureZoom: z.number().int().default(0).describe('Zoom accessibility feature setting'),
+  accessibilityFeatureAssistiveTouch: z.int().default(0).describe('Assistive touch accessibility feature setting'),
+  accessibilityFeatureGrayscaleDisplay: z.int().default(0).describe('Grayscale display accessibility feature setting'),
+  accessibilityFeatureInvertColors: z.int().default(0).describe('Invert colors accessibility feature setting'),
+  accessibilityFeatureVoiceOver: z.int().default(0).describe('VoiceOver accessibility feature setting'),
+  accessibilityFeatureZoom: z.int().default(0).describe('Zoom accessibility feature setting'),
 
   // ==================================================================================
   // PROCTORING AND AI MONITORING
@@ -348,6 +373,23 @@ export const sebConfigSchema = z.object({
   proctoringDetectTalking: z.boolean().default(false).describe('Boolean indicating if talking detection is enabled'),
   proctoringDetectTalkingDisplay: z.boolean().default(false).describe('Boolean indicating if talking detection should be displayed'),
   enableScreenProctoring: z.boolean().default(false).describe('Boolean indicating if screen-based proctoring is enabled'),
+
+  // Screen proctoring settings
+  screenProctoringCacheSize: z.int().default(500).describe('Integer indicating the cache size for screen proctoring'),
+  screenProctoringClientId: z.string().default('').describe('String containing the client ID for screen proctoring'),
+  screenProctoringClientSecret: z.string().default('').describe('String containing the client secret for screen proctoring'),
+  screenProctoringClientSessionId: z.string().default('').describe('String containing the client session ID for screen proctoring'),
+  screenProctoringGroupId: z.string().default('').describe('String containing the group ID for screen proctoring'),
+  screenProctoringImageDownscale: z.number().default(1).describe('Real value indicating the image downscale factor for screen proctoring'),
+  screenProctoringImageFormat: z.int().default(0).describe('Integer indicating the image format for screen proctoring'),
+  screenProctoringImageQuantization: z.int().default(0).describe('Integer indicating the image quantization for screen proctoring'),
+  screenProctoringIndicateHealthAndCaching: z.boolean().default(false).describe('Boolean indicating if health and caching should be indicated in screen proctoring'),
+  screenProctoringMetadataActiveAppEnabled: z.boolean().default(true).describe('Boolean indicating if active app metadata is enabled in screen proctoring'),
+  screenProctoringMetadataURLEnabled: z.boolean().default(true).describe('Boolean indicating if URL metadata is enabled in screen proctoring'),
+  screenProctoringMetadataWindowTitleEnabled: z.boolean().default(true).describe('Boolean indicating if window title metadata is enabled in screen proctoring'),
+  screenProctoringScreenshotMaxInterval: z.int().default(5000).describe('Integer indicating the maximum screenshot interval for screen proctoring in milliseconds'),
+  screenProctoringScreenshotMinInterval: z.int().default(1000).describe('Integer indicating the minimum screenshot interval for screen proctoring in milliseconds'),
+  screenProctoringServiceURL: z.string().default('').describe('String containing the service URL for screen proctoring'),
 
   // ==================================================================================
   // APPLICATIONS AND PROCESSES
@@ -390,9 +432,9 @@ export const sebConfigSchema = z.object({
   enableStartMenu: z.boolean().default(false).describe('Boolean indicating if the Start Menu is enabled'),
 
   // Exit key configuration
-  exitKey1: z.number().int().default(0).describe('First exit key code'),
-  exitKey2: z.number().int().default(0).describe('Second exit key code'),
-  exitKey3: z.number().int().default(0).describe('Third exit key code'),
+  exitKey1: z.int().default(0).describe('First exit key code'),
+  exitKey2: z.int().default(0).describe('Second exit key code'),
+  exitKey3: z.int().default(0).describe('Third exit key code'),
   hookKeys: z.boolean().default(false).describe('Boolean indicating if key hooking is enabled'),
 
   // Mouse controls
@@ -417,8 +459,8 @@ export const sebConfigSchema = z.object({
   mobileShowEditConfigShortcutItem: z.boolean().default(false).describe('Boolean indicating if edit config shortcut item should be shown on mobile'),
   mobileShowSettings: z.boolean().default(false).describe('Boolean indicating if settings should be shown on mobile'),
   mobileSleepModeLockScreen: z.boolean().default(false).describe('Boolean indicating if sleep mode should lock the screen on mobile'),
-  mobileStatusBarAppearance: z.number().int().default(0).describe('Integer representing the status bar appearance on mobile'),
-  mobileStatusBarAppearanceExtended: z.number().int().default(0).describe('Integer representing the extended status bar appearance on mobile'),
+  mobileStatusBarAppearance: z.int().default(0).describe('Integer representing the status bar appearance on mobile'),
+  mobileStatusBarAppearanceExtended: z.int().default(0).describe('Integer representing the extended status bar appearance on mobile'),
 
   // Form factor and orientation support
   mobileSupportedFormFactorsCompact: z.boolean().default(false).describe('Boolean indicating if compact form factors are supported on mobile'),
@@ -440,7 +482,7 @@ export const sebConfigSchema = z.object({
   // Browser messaging and communication
   browserMessagingSocket: z.string().optional().describe('String containing a service URL for the socket server'),
   browserMessagingSocketEnabled: z.boolean().default(false).describe('Boolean indicating if browser messaging socket is enabled'),
-  browserMessagingPingTime: z.number().int().default(0).describe('Integer representing the ping time for browser messaging in milliseconds'),
+  browserMessagingPingTime: z.int().default(0).describe('Integer representing the ping time for browser messaging in milliseconds'),
 
   // ==================================================================================
   // JITSI MEET INTEGRATION
@@ -527,7 +569,7 @@ export const sebConfigSchema = z.object({
   backgroundOpenSEBConfig: z.boolean().default(false).describe('Boolean indicating if SEB config should be opened in background'),
 
   // Clipboard policy
-  clipboardPolicy: z.number().int().default(0).describe('Integer representing the clipboard policy'),
+  clipboardPolicy: z.int().default(0).describe('Integer representing the clipboard policy'),
 
   // ==================================================================================
   // VERSION AND METADATA
