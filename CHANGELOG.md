@@ -1,5 +1,18 @@
 # Changelog
 
+## [2.0.0](https://github.com/certible/seb-node/compare/v1.1.0...v2.0.0) (2025-11-27)
+
+
+### ⚠ BREAKING CHANGES
+
+* :sparkles: update schema and make it strict ([#19](https://github.com/certible/seb-node/issues/19))
+
+### Features
+
+* :sparkles: extend schema with correct embedded cert ([b3400b7](https://github.com/certible/seb-node/commit/b3400b7e8179f024f5b2b51ae72636f4e72e6d03))
+* :sparkles: extend schema with correct embedded cert ([44a132c](https://github.com/certible/seb-node/commit/44a132cf59684f17404c36562151545b3424c8b9))
+* :sparkles: update schema and make it strict ([#19](https://github.com/certible/seb-node/issues/19)) ([26da5b7](https://github.com/certible/seb-node/commit/26da5b76e8b7c806c5475e802ceb95402558f716))
+
 ## [1.1.0](https://github.com/certible/seb-node/compare/v1.0.0...v1.1.0) (2025-11-03)
 
 
