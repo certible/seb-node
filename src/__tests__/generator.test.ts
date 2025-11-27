@@ -78,12 +78,12 @@ describe('config generator', () => {
       const config = {
         startURL: 'https://exam.example.com',
       };
-      
-      const looseConfig = { 
+
+      const looseConfig = {
         unknownKey: 'some value',
       };
-      
-      const result = await generateSEBConfig(config, {}, looseConfig); 
+
+      const result = await generateSEBConfig(config, {}, looseConfig);
       expect(result).toBeDefined();
       expect(result.xml).toContain('unknownKey');
       expect(result.xml).toContain('some value');

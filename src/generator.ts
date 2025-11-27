@@ -83,7 +83,7 @@ export async function generateSEBConfig(
     validatedConfig = config as SEBConfig;
   }
 
-  if(looseConfig && looseConfig instanceof Object){
+  if (looseConfig && looseConfig instanceof Object) {
     Object.assign(validatedConfig, looseConfig);
   }
 
