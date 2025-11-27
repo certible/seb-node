@@ -54,7 +54,7 @@ describe('schema', () => {
     it('should validate URL filter rules', () => {
       const config = {
         startURL: 'https://exam.example.com',
-        urlFilterRules: [
+        URLFilterRules: [
           {
             active: true,
             regex: false,

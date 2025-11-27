@@ -23,7 +23,7 @@ describe('config generator', () => {
       expect(result.xml).toContain('<?xml version="1.0"');
       expect(result.xml).toContain('<plist version="1.0">');
       expect(result.xml).toContain('startURL');
-      expect(result.xml).toContain('https://exam.example.com');
+      expect(result.xml).toContain(config.startURL);
       expect(result.size).toBeGreaterThan(0);
     });
 
@@ -47,8 +47,8 @@ describe('config generator', () => {
     it('should handle URL filter rules', async () => {
       const config = {
         startURL: 'https://exam.example.com',
-        enableURLFilter: true,
-        urlFilterRules: [
+        URLFilterEnable: true,
+        URLFilterRules: [
           {
             active: true,
             regex: false,
@@ -60,9 +60,33 @@ describe('config generator', () => {
 
       const result = await generateSEBConfig(config);
 
-      expect(result.xml).toContain('urlFilterRules');
+      expect(result.xml).toContain('URLFilterRules');
       expect(result.xml).toContain('example.com');
       expect(result.xml).toContain('action');
+    });
+
+    it('should fail if unknown config keys are provided', async () => {
+      const config = {
+        startURL: 'https://exam.example.com',
+        unknownKey: 'some value',
+      } as any;
+
+      await expect(generateSEBConfig(config)).rejects.toThrow();
+    });
+
+    it('should correctly return assign loose objects to config', async () => {
+      const config = {
+        startURL: 'https://exam.example.com',
+      };
+      
+      const looseConfig = { 
+        unknownKey: 'some value',
+      };
+      
+      const result = await generateSEBConfig(config, {}, looseConfig); 
+      expect(result).toBeDefined();
+      expect(result.xml).toContain('unknownKey');
+      expect(result.xml).toContain('some value');
     });
   });
 
@@ -91,8 +115,8 @@ describe('config generator', () => {
         startURL: examUrl,
         allowQuit: true,
         browserViewMode: 0,
-        enableURLFilter: true,
-        urlFilterRules: [
+        URLFilterEnable: true,
+        URLFilterRules: [
           {
             active: true,
             regex: false,
@@ -108,7 +132,7 @@ describe('config generator', () => {
         examKeySalt: Buffer.from('examKeySalt'),
       };
 
-      const result = await generateSEBConfig(config);
+      const result = await generateSEBConfig(config, { validate: true });
 
       expect(result.data).toBeInstanceOf(Buffer);
       expect(result.size).toBeGreaterThan(0);
@@ -207,8 +231,8 @@ describe('config generator', () => {
         startURL: 'https://exam.example.com',
         allowQuit: false,
         browserViewMode: 1,
-        enableURLFilter: true,
-        urlFilterRules: [
+        URLFilterEnable: true,
+        URLFilterRules: [
           {
             active: true,
             regex: false,

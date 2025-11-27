@@ -133,7 +133,7 @@ describe('plist Utilities', () => {
 
     it('should handle complex nested structures', () => {
       const config = {
-        urlFilterRules: [
+        URLFilterRules: [
           {
             active: true,
             expression: 'example.com',
@@ -144,7 +144,7 @@ describe('plist Utilities', () => {
 
       const xml = generatePlistXml(config);
 
-      expect(xml).toContain('urlFilterRules');
+      expect(xml).toContain('URLFilterRules');
       expect(xml).toContain('<array>');
       expect(xml).toContain('active');
       expect(xml).toContain('expression');
