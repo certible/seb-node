@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.0.1](https://github.com/certible/seb-node/compare/v2.0.0...v2.0.1) (2025-11-28)
+
+
+### Bug Fixes
+
+* :bug: add missing node types and add comment about client hash ([#24](https://github.com/certible/seb-node/issues/24)) ([432ab7c](https://github.com/certible/seb-node/commit/432ab7cf1d85d8c037f09d502d82204b791635f0))
+
 ## [2.0.0](https://github.com/certible/seb-node/compare/v1.1.0...v2.0.0) (2025-11-27)
 
 
