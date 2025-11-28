@@ -47,8 +47,8 @@
     "prepublishOnly": "npm run build"
   },
   "dependencies": {
-    "zod": "^4.1.12",
-    "@types/node": "20.19.25"
+    "@types/node": "20.19.25",
+    "zod": "^4.1.12"
   },
   "devDependencies": {
     "@antfu/eslint-config": "6.2.0",
