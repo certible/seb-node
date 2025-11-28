@@ -125,6 +125,8 @@ if (keys.isAvailable) {
 }
 ```
 
+> **Note:** The Config Key and Browser Exam Key obtained via `getSEBKeys` are hashed with the current URL. In single-page applications (SPAs), SEB will not update the hash, so ensure that the URL for the hash reflects the correct state when verifying keys.
+
 ## Import Paths
 
 ```typescript
