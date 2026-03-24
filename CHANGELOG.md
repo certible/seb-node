@@ -1,5 +1,16 @@
 # Changelog
 
+## [3.0.0](https://github.com/certible/seb-node/compare/v2.0.1...v3.0.0) (2026-03-24)
+
+
+### ⚠ BREAKING CHANGES
+
+* minimum Node.js version raised from 18 to 22
+
+### Features
+
+* require Node 22 as minimum version ([173d37f](https://github.com/certible/seb-node/commit/173d37f6426830c02d78e69532cbfbd315b9f1da))
+
 ## [2.0.1](https://github.com/certible/seb-node/compare/v2.0.0...v2.0.1) (2025-11-28)
 
 
