@@ -12,5 +12,6 @@ export default antfu({
   rules: {
     "style/semi": ["error", "always"],
     "node/prefer-global/buffer": ["error", "always"],
+    "e18e/prefer-static-regex": "off",
   },
 });
