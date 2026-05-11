@@ -50,7 +50,7 @@
     "zod": "^4.1.12"
   },
   "devDependencies": {
-    "@antfu/eslint-config": "^7.7.3",
+    "@antfu/eslint-config": "^9.0.0",
     "@types/node": "22.19.15",
     "fast-plist": "0.1.3",
     "tsup": "^8.0.1",
