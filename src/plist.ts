@@ -25,8 +25,7 @@ export function valueToXml(value: unknown, indent: string = '\t'): string {
   if (typeof value === 'number') {
     if (Number.isInteger(value)) {
       return `<integer>${value}</integer>`;
-    }
-    else {
+    } else {
       return `<real>${value}</real>`;
     }
   }
@@ -49,9 +48,10 @@ export function valueToXml(value: unknown, indent: string = '\t'): string {
     for (const item of value) {
       // For array of dicts (like urlFilterRules), sort dict keys
       if (typeof item === 'object' && item !== null && !Array.isArray(item)) {
-        items.push(`${indent}\t${dictToXml(item as Record<string, unknown>, `${indent}\t`)}`);
-      }
-      else {
+        items.push(
+          `${indent}\t${dictToXml(item as Record<string, unknown>, `${indent}\t`)}`,
+        );
+      } else {
         items.push(`${indent}\t${valueToXml(item, `${indent}\t`)}`);
       }
     }
@@ -69,7 +69,10 @@ export function valueToXml(value: unknown, indent: string = '\t'): string {
 /**
  * Convert a dictionary/object to plist dict XML
  */
-export function dictToXml(obj: Record<string, unknown>, indent: string = '\t'): string {
+export function dictToXml(
+  obj: Record<string, unknown>,
+  indent: string = '\t',
+): string {
   const lines: string[] = ['<dict>'];
 
   // Sort keys alphabetically (required for Config Key generation)
@@ -82,8 +85,7 @@ export function dictToXml(obj: Record<string, unknown>, indent: string = '\t'): 
     const valueXml = valueToXml(obj[key], indent);
     if (valueXml.includes('\n')) {
       lines.push(valueXml);
-    }
-    else {
+    } else {
       lines.push(`${indent}${valueXml}`);
     }
   }
@@ -98,7 +100,9 @@ export function dictToXml(obj: Record<string, unknown>, indent: string = '\t'): 
 export function generatePlistXml(config: Record<string, unknown>): string {
   const lines: string[] = [];
   lines.push('<?xml version="1.0" encoding="UTF-8"?>');
-  lines.push('<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">');
+  lines.push(
+    '<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">',
+  );
   lines.push('<plist version="1.0">');
   lines.push('<dict>');
 

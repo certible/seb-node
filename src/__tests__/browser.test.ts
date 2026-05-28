@@ -1,10 +1,6 @@
 /* eslint-disable no-restricted-globals, vars-on-top */
 import { beforeEach, describe, expect, it } from 'vitest';
-import {
-  getSEBKeys,
-  isSEBAvailable,
-  parseSEBVersion,
-} from '../browser.js';
+import { getSEBKeys, isSEBAvailable, parseSEBVersion } from '../browser.js';
 
 declare global {
   var window: Window & typeof globalThis;
@@ -103,7 +99,9 @@ describe('browser', () => {
 
   describe('parseSEBVersion', () => {
     it('should parse Windows version string', () => {
-      const result = parseSEBVersion('SEB_Windows_3.3.2_1234_org.safeexambrowser.SEB');
+      const result = parseSEBVersion(
+        'SEB_Windows_3.3.2_1234_org.safeexambrowser.SEB',
+      );
       expect(result).toEqual({
         appName: 'SEB',
         os: 'Windows',
@@ -114,7 +112,9 @@ describe('browser', () => {
     });
 
     it('should parse macOS version string', () => {
-      const result = parseSEBVersion('SafeExamBrowser_macOS_3.1.0_900_org.safeexambrowser.SafeExamBrowser');
+      const result = parseSEBVersion(
+        'SafeExamBrowser_macOS_3.1.0_900_org.safeexambrowser.SafeExamBrowser',
+      );
       expect(result).toEqual({
         appName: 'SafeExamBrowser',
         os: 'macOS',
@@ -125,7 +125,9 @@ describe('browser', () => {
     });
 
     it('should parse iOS version string', () => {
-      const result = parseSEBVersion('SEB_iOS_3.0_500_org.safeexambrowser.SEB-iOS');
+      const result = parseSEBVersion(
+        'SEB_iOS_3.0_500_org.safeexambrowser.SEB-iOS',
+      );
       expect(result).toEqual({
         appName: 'SEB',
         os: 'iOS',
@@ -143,12 +145,16 @@ describe('browser', () => {
     });
 
     it('should return null for unknown OS', () => {
-      const result = parseSEBVersion('SEB_Linux_1.0_100_org.safeexambrowser.SEB');
+      const result = parseSEBVersion(
+        'SEB_Linux_1.0_100_org.safeexambrowser.SEB',
+      );
       expect(result).toBe(null);
     });
 
     it('should handle version strings with underscores in bundle ID', () => {
-      const result = parseSEBVersion('SEB_Windows_3.3.2_1234_org.safe_exam_browser.SEB');
+      const result = parseSEBVersion(
+        'SEB_Windows_3.3.2_1234_org.safe_exam_browser.SEB',
+      );
       expect(result).toEqual({
         appName: 'SEB',
         os: 'Windows',
