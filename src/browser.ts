@@ -59,8 +59,10 @@ export interface SEBKeys {
  * @returns true if running inside SEB with JS API support
  */
 export function isSEBAvailable(): boolean {
-  return typeof window !== 'undefined'
-    && typeof window.SafeExamBrowser !== 'undefined';
+  return (
+    typeof window !== 'undefined' &&
+    typeof window.SafeExamBrowser !== 'undefined'
+  );
 }
 
 /**

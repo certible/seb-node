@@ -78,8 +78,7 @@ export async function generateSEBConfig(
       throw new Error(`Invalid SEB configuration: ${content.error.message}`);
     }
     validatedConfig = content.data;
-  }
-  else {
+  } else {
     validatedConfig = config as SEBConfig;
   }
 
@@ -87,14 +86,15 @@ export async function generateSEBConfig(
     Object.assign(validatedConfig, looseConfig);
   }
 
-  const plistXml = generatePlistXml(validatedConfig as unknown as Record<string, unknown>);
+  const plistXml = generatePlistXml(
+    validatedConfig as unknown as Record<string, unknown>,
+  );
 
   let compressedData: Buffer;
 
   if (encrypt && password) {
     compressedData = await generateEncryptedSEB(plistXml, password);
-  }
-  else {
+  } else {
     // Unencrypted mode (plain)
     compressedData = await generatePlainSEB(plistXml);
   }
@@ -131,7 +131,10 @@ export async function generatePlainSEB(plistXml: string): Promise<Buffer> {
  * @param password - The password to use for encryption
  * @returns The compressed and encrypted SEB file data
  */
-export async function generateEncryptedSEB(plistXml: string, password: string): Promise<Buffer> {
+export async function generateEncryptedSEB(
+  plistXml: string,
+  password: string,
+): Promise<Buffer> {
   const xmlBuffer = Buffer.from(plistXml, 'utf8');
 
   const gzippedXml = await gzipAsync(xmlBuffer);
@@ -169,7 +172,10 @@ export async function generateEncryptedSEB(plistXml: string, password: string): 
  * const xml = await decompressSEBFile(sebData, 'password123');
  * ```
  */
-export async function decompressSEBFile(sebData: Buffer, password?: string): Promise<string> {
+export async function decompressSEBFile(
+  sebData: Buffer,
+  password?: string,
+): Promise<string> {
   const decompressed = await gunzipAsync(sebData);
 
   // Read prefix (4 bytes)
@@ -179,8 +185,7 @@ export async function decompressSEBFile(sebData: Buffer, password?: string): Pro
     const gzippedXml = decompressed.subarray(4);
     const xmlBuffer = await gunzipAsync(gzippedXml);
     return xmlBuffer.toString('utf8');
-  }
-  else if (prefix === 'pwcc') {
+  } else if (prefix === 'pwcc') {
     if (!password) {
       throw new Error('Password required for encrypted SEB file');
     }
@@ -193,12 +198,14 @@ export async function decompressSEBFile(sebData: Buffer, password?: string): Pro
     const key = crypto.pbkdf2Sync(password, salt, 10000, 32, 'sha256');
 
     const decipher = crypto.createDecipheriv('aes-256-cbc', key, iv);
-    const decrypted = Buffer.concat([decipher.update(encrypted), decipher.final()]);
+    const decrypted = Buffer.concat([
+      decipher.update(encrypted),
+      decipher.final(),
+    ]);
 
     const xmlBuffer = await gunzipAsync(decrypted);
     return xmlBuffer.toString('utf8');
-  }
-  else {
+  } else {
     throw new Error(`Unknown SEB file format. Prefix: ${prefix}`);
   }
 }

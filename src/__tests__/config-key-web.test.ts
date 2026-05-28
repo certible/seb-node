@@ -1,6 +1,9 @@
 import { describe, expect, it } from 'vitest';
 import { removeURLFragment } from '../config-key-shared.js';
-import { generateConfigKeyHash, verifyConfigKeyHash } from '../config-key-web.js';
+import {
+  generateConfigKeyHash,
+  verifyConfigKeyHash,
+} from '../config-key-web.js';
 
 // Mock Web Crypto API for Node.js test environment
 const mockCrypto = {
@@ -22,15 +25,21 @@ globalThis.window = {
 describe('config-key-web', () => {
   describe('removeURLFragment', () => {
     it('removes fragment from URL', () => {
-      expect(removeURLFragment('https://example.com/path#fragment')).toBe('https://example.com/path');
+      expect(removeURLFragment('https://example.com/path#fragment')).toBe(
+        'https://example.com/path',
+      );
     });
 
     it('handles URL without fragment', () => {
-      expect(removeURLFragment('https://example.com/path')).toBe('https://example.com/path');
+      expect(removeURLFragment('https://example.com/path')).toBe(
+        'https://example.com/path',
+      );
     });
 
     it('handles multiple # characters', () => {
-      expect(removeURLFragment('https://example.com/path#fragment#more')).toBe('https://example.com/path');
+      expect(removeURLFragment('https://example.com/path#fragment#more')).toBe(
+        'https://example.com/path',
+      );
     });
   });
 
@@ -64,8 +73,14 @@ describe('config-key-web', () => {
     it('produces different hashes for different URLs', async () => {
       const configKey = 'abc123def456';
 
-      const hash1 = await generateConfigKeyHash('https://example.com/page1', configKey);
-      const hash2 = await generateConfigKeyHash('https://example.com/page2', configKey);
+      const hash1 = await generateConfigKeyHash(
+        'https://example.com/page1',
+        configKey,
+      );
+      const hash2 = await generateConfigKeyHash(
+        'https://example.com/page2',
+        configKey,
+      );
 
       expect(hash1).not.toBe(hash2);
     });
@@ -94,7 +109,8 @@ describe('config-key-web', () => {
     it('returns false for non-matching hash', async () => {
       const url = 'https://exam.example.com/quiz/1';
       const configKey = 'abc123def456';
-      const wrongHash = 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa';
+      const wrongHash =
+        'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa';
 
       const isValid = await verifyConfigKeyHash(url, configKey, wrongHash);
 
@@ -118,7 +134,11 @@ describe('config-key-web', () => {
       const configKey = 'abc123def456';
       const hash = await generateConfigKeyHash(urlWithoutFragment, configKey);
 
-      const isValid = await verifyConfigKeyHash(urlWithFragment, configKey, hash);
+      const isValid = await verifyConfigKeyHash(
+        urlWithFragment,
+        configKey,
+        hash,
+      );
 
       expect(isValid).toBe(true);
     });
@@ -129,9 +149,9 @@ describe('config-key-web', () => {
       const originalWindow = globalThis.window;
       globalThis.window = undefined as any;
 
-      await expect(generateConfigKeyHash('https://example.com', 'key')).rejects.toThrow(
-        'Web Crypto API is not available in this environment',
-      );
+      await expect(
+        generateConfigKeyHash('https://example.com', 'key'),
+      ).rejects.toThrow('Web Crypto API is not available in this environment');
 
       globalThis.window = originalWindow;
     });

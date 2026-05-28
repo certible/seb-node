@@ -1,5 +1,10 @@
 import { describe, expect, it } from 'vitest';
-import { dictToXml, escapeXml, generatePlistXml, valueToXml } from '../plist.js';
+import {
+  dictToXml,
+  escapeXml,
+  generatePlistXml,
+  valueToXml,
+} from '../plist.js';
 
 describe('plist Utilities', () => {
   describe('escapeXml', () => {
@@ -8,11 +13,13 @@ describe('plist Utilities', () => {
       expect(escapeXml('a < b')).toBe('a &lt; b');
       expect(escapeXml('a > b')).toBe('a &gt; b');
       expect(escapeXml('a "quote"')).toBe('a &quot;quote&quot;');
-      expect(escapeXml('a \'quote\'')).toBe('a &apos;quote&apos;');
+      expect(escapeXml("a 'quote'")).toBe('a &apos;quote&apos;');
     });
 
     it('should handle strings with multiple special characters', () => {
-      expect(escapeXml('<tag attr="value">')).toBe('&lt;tag attr=&quot;value&quot;&gt;');
+      expect(escapeXml('<tag attr="value">')).toBe(
+        '&lt;tag attr=&quot;value&quot;&gt;',
+      );
     });
   });
 

@@ -11,7 +11,11 @@ import { removeURLFragment } from './config-key-shared.js';
  */
 async function sha256(message: string): Promise<string> {
   // Check if we're in a browser environment
-  if (typeof window === 'undefined' || !window.crypto || !window.crypto.subtle) {
+  if (
+    typeof window === 'undefined' ||
+    !window.crypto ||
+    !window.crypto.subtle
+  ) {
     throw new Error('Web Crypto API is not available in this environment');
   }
 
@@ -19,7 +23,9 @@ async function sha256(message: string): Promise<string> {
   const data = encoder.encode(message);
   const hashBuffer = await window.crypto.subtle.digest('SHA-256', data);
   const hashArray = Array.from(new Uint8Array(hashBuffer));
-  const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+  const hashHex = hashArray
+    .map((b) => b.toString(16).padStart(2, '0'))
+    .join('');
   return hashHex.toLowerCase();
 }
 
@@ -37,7 +43,10 @@ async function sha256(message: string): Promise<string> {
  * // Compare this with the X-SafeExamBrowser-ConfigKeyHash header value
  * ```
  */
-export async function generateConfigKeyHash(url: string, configKey: string): Promise<string> {
+export async function generateConfigKeyHash(
+  url: string,
+  configKey: string,
+): Promise<string> {
   const urlWithoutFragment = removeURLFragment(url);
   const combined = urlWithoutFragment + configKey;
   return sha256(combined);
@@ -63,7 +72,11 @@ export async function generateConfigKeyHash(url: string, configKey: string): Pro
  * }
  * ```
  */
-export async function verifyConfigKeyHash(url: string, configKey: string, receivedHash: string): Promise<boolean> {
+export async function verifyConfigKeyHash(
+  url: string,
+  configKey: string,
+  receivedHash: string,
+): Promise<boolean> {
   const expectedHash = await generateConfigKeyHash(url, configKey);
   return expectedHash.toLowerCase() === receivedHash.toLowerCase();
 }

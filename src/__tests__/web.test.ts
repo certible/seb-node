@@ -29,7 +29,9 @@ describe('web exports', () => {
     expect(url).toBe('https://example.com/page');
 
     // Test parseSEBVersion
-    const version = parseSEBVersion('SEB_Windows_3.3.2_1234_org.safeexambrowser.SEB');
+    const version = parseSEBVersion(
+      'SEB_Windows_3.3.2_1234_org.safeexambrowser.SEB',
+    );
     expect(version?.os).toBe('Windows');
   });
 });

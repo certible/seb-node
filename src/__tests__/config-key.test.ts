@@ -10,17 +10,27 @@ import {
 describe('config-key', () => {
   describe('removeURLFragment', () => {
     it('should remove fragment from URL', () => {
-      expect(removeURLFragment('https://example.com/page#section')).toBe('https://example.com/page');
-      expect(removeURLFragment('https://example.com/page')).toBe('https://example.com/page');
-      expect(removeURLFragment('https://example.com/#top')).toBe('https://example.com/');
+      expect(removeURLFragment('https://example.com/page#section')).toBe(
+        'https://example.com/page',
+      );
+      expect(removeURLFragment('https://example.com/page')).toBe(
+        'https://example.com/page',
+      );
+      expect(removeURLFragment('https://example.com/#top')).toBe(
+        'https://example.com/',
+      );
     });
 
     it('should handle multiple # characters', () => {
-      expect(removeURLFragment('https://example.com/page#section#subsection')).toBe('https://example.com/page');
+      expect(
+        removeURLFragment('https://example.com/page#section#subsection'),
+      ).toBe('https://example.com/page');
     });
 
     it('should handle empty fragment', () => {
-      expect(removeURLFragment('https://example.com/page#')).toBe('https://example.com/page');
+      expect(removeURLFragment('https://example.com/page#')).toBe(
+        'https://example.com/page',
+      );
     });
   });
 
@@ -116,7 +126,9 @@ describe('config-key', () => {
         data: Buffer.from('hello world', 'utf8'),
       };
       const json = convertToSEBJSON(config);
-      const expectedBase64 = Buffer.from('hello world', 'utf8').toString('base64');
+      const expectedBase64 = Buffer.from('hello world', 'utf8').toString(
+        'base64',
+      );
       expect(json).toContain(`"data":"${expectedBase64}"`);
     });
 
@@ -188,7 +200,13 @@ describe('config-key', () => {
       expect(json).toContain('URLFilterRules');
 
       // Should be alphabetically sorted at root level
-      const keys = ['additionalResources', 'allowQuit', 'browserViewMode', 'startURL', 'URLFilterRules'];
+      const keys = [
+        'additionalResources',
+        'allowQuit',
+        'browserViewMode',
+        'startURL',
+        'URLFilterRules',
+      ];
       let lastIndex = -1;
       for (const key of keys) {
         const index = json.indexOf(`"${key}"`);
@@ -409,7 +427,11 @@ describe('config-key', () => {
 
       // Verify with wrong URL should fail
       const wrongURL = 'https://malicious.com/fake';
-      const isValidWrong = verifyConfigKeyHash(wrongURL, configKey, configKeyHash);
+      const isValidWrong = verifyConfigKeyHash(
+        wrongURL,
+        configKey,
+        configKeyHash,
+      );
       expect(isValidWrong).toBe(false);
     });
   });

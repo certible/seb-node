@@ -50,7 +50,7 @@ function stringifySEBJSON(value: unknown): string {
   }
 
   if (Array.isArray(value)) {
-    const items = value.map(item => stringifySEBJSON(item));
+    const items = value.map((item) => stringifySEBJSON(item));
     return `[${items.join(',')}]`;
   }
 
@@ -60,7 +60,13 @@ function stringifySEBJSON(value: unknown): string {
     // Remove empty dictionaries
     const nonEmptyKeys = Object.keys(obj).filter((key) => {
       const val = obj[key];
-      if (typeof val === 'object' && val !== null && !Array.isArray(val) && !Buffer.isBuffer(val) && !(val instanceof Date)) {
+      if (
+        typeof val === 'object' &&
+        val !== null &&
+        !Array.isArray(val) &&
+        !Buffer.isBuffer(val) &&
+        !(val instanceof Date)
+      ) {
         return Object.keys(val as Record<string, unknown>).length > 0;
       }
       return true;
@@ -72,7 +78,9 @@ function stringifySEBJSON(value: unknown): string {
 
     // Sort keys alphabetically
     const sortedKeys = nonEmptyKeys.sort((a, b) => {
-      return a.toLowerCase().localeCompare(b.toLowerCase(), 'en', { sensitivity: 'base' });
+      return a
+        .toLowerCase()
+        .localeCompare(b.toLowerCase(), 'en', { sensitivity: 'base' });
     });
 
     const pairs = sortedKeys.map((key) => {
@@ -155,7 +163,11 @@ export function generateConfigKeyHash(url: string, configKey: string): string {
  * }
  * ```
  */
-export function verifyConfigKeyHash(url: string, configKey: string, receivedHash: string): boolean {
+export function verifyConfigKeyHash(
+  url: string,
+  configKey: string,
+  receivedHash: string,
+): boolean {
   const expectedHash = generateConfigKeyHash(url, configKey);
   return expectedHash.toLowerCase() === receivedHash.toLowerCase();
 }

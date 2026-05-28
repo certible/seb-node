@@ -5,7 +5,10 @@ A TypeScript library for creating Safe Exam Browser (SEB) configuration files an
 ## Installation
 
 ```bash
+# NPM
 npm install @certible/seb-node
+# PNPM
+pnpm add @certible/seb-node
 ```
 
 ## Usage
@@ -51,7 +54,7 @@ const result = await generateSEBConfig(
   {
     encrypt: true,
     password: 'your-secure-password',
-  }
+  },
 );
 ```
 
@@ -67,7 +70,7 @@ const result = await generateSEBConfig(
   },
   {
     validate: false,
-  }
+  },
 );
 ```
 
@@ -101,7 +104,8 @@ When SEB sends requests, it includes the Config Key hash in the `X-SafeExamBrows
 import { verifyConfigKeyHash } from '@certible/seb-node';
 
 app.get('/exam', (req, res) => {
-  const configKey = '81aad4ab9dfd447cc479e6a4a7c9a544e2cafc7f3adeb68b2a21efad68eca4dc';
+  const configKey =
+    '81aad4ab9dfd447cc479e6a4a7c9a544e2cafc7f3adeb68b2a21efad68eca4dc';
   const requestURL = `${req.protocol}://${req.get('host')}${req.originalUrl}`;
   const receivedHash = req.headers['x-safeexambrowser-configkeyhash'];
 
@@ -131,7 +135,11 @@ if (keys.isAvailable) {
 
 ```typescript
 // Server-side: Main package
-import { generateConfigKey, generateSEBConfig, verifyConfigKeyHash } from '@certible/seb-node';
+import {
+  generateConfigKey,
+  generateSEBConfig,
+  verifyConfigKeyHash,
+} from '@certible/seb-node';
 
 // Client-side: Web export (smaller bundle, browser-only code)
 import { getSEBKeys, isSEBAvailable } from '@certible/seb-node/web';

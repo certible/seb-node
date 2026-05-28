@@ -16,12 +16,7 @@ export {
 } from './generator.js';
 export type { SEBGenerateOptions, SEBGenerateResult } from './generator.js';
 
-export {
-  dictToXml,
-  escapeXml,
-  generatePlistXml,
-  valueToXml,
-} from './plist.js';
+export { dictToXml, escapeXml, generatePlistXml, valueToXml } from './plist.js';
 
 export { sebConfigSchema } from './schema.js';
 export type {

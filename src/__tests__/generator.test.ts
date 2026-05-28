@@ -3,7 +3,12 @@ import { gunzip } from 'node:zlib';
 import { parse as parsePlist } from 'fast-plist';
 import { describe, expect, it } from 'vitest';
 import { generateConfigKey } from '../config-key.js';
-import { decompressSEBFile, generateEncryptedSEB, generatePlainSEB, generateSEBConfig } from '../generator.js';
+import {
+  decompressSEBFile,
+  generateEncryptedSEB,
+  generatePlainSEB,
+  generateSEBConfig,
+} from '../generator.js';
 
 const gunzipAsync = promisify(gunzip);
 
@@ -40,7 +45,9 @@ describe('config generator', () => {
         startURL: 'not-a-url',
       };
 
-      const result = await generateSEBConfig(invalidConfig, { validate: false });
+      const result = await generateSEBConfig(invalidConfig, {
+        validate: false,
+      });
       expect(result).toBeDefined();
     });
 
@@ -92,7 +99,8 @@ describe('config generator', () => {
 
   describe('generatePlainSEB', () => {
     it('should generate unencrypted SEB file with plnd prefix', async () => {
-      const xml = '<?xml version="1.0"?><plist version="1.0"><dict></dict></plist>';
+      const xml =
+        '<?xml version="1.0"?><plist version="1.0"><dict></dict></plist>';
       const result = await generatePlainSEB(xml);
 
       expect(result).toBeInstanceOf(Buffer);
@@ -166,7 +174,10 @@ describe('config generator', () => {
       };
       const password = 'test-password-123';
 
-      const result = await generateSEBConfig(config, { encrypt: true, password });
+      const result = await generateSEBConfig(config, {
+        encrypt: true,
+        password,
+      });
       const xml = await decompressSEBFile(result.data, password);
 
       expect(xml).toContain('<?xml version="1.0"');
@@ -182,7 +193,10 @@ describe('config generator', () => {
       };
       const password = 'secret-password';
 
-      const result = await generateSEBConfig(config, { encrypt: true, password });
+      const result = await generateSEBConfig(config, {
+        encrypt: true,
+        password,
+      });
 
       await expect(decompressSEBFile(result.data)).rejects.toThrow(
         'Password required for encrypted SEB file',
@@ -196,13 +210,19 @@ describe('config generator', () => {
       const correctPassword = 'correct-password';
       const wrongPassword = 'wrong-password';
 
-      const result = await generateSEBConfig(config, { encrypt: true, password: correctPassword });
+      const result = await generateSEBConfig(config, {
+        encrypt: true,
+        password: correctPassword,
+      });
 
-      await expect(decompressSEBFile(result.data, wrongPassword)).rejects.toThrow();
+      await expect(
+        decompressSEBFile(result.data, wrongPassword),
+      ).rejects.toThrow();
     });
 
     it('should handle plain SEB files generated with generatePlainSEB', async () => {
-      const xml = '<?xml version="1.0"?><plist version="1.0"><dict><key>startURL</key><string>https://test.com</string></dict></plist>';
+      const xml =
+        '<?xml version="1.0"?><plist version="1.0"><dict><key>startURL</key><string>https://test.com</string></dict></plist>';
       const sebData = await generatePlainSEB(xml);
 
       const decompressedXml = await decompressSEBFile(sebData);
@@ -211,7 +231,8 @@ describe('config generator', () => {
     });
 
     it('should handle encrypted SEB files generated with generateEncryptedSEB', async () => {
-      const xml = '<?xml version="1.0"?><plist version="1.0"><dict><key>allowQuit</key><true/></dict></plist>';
+      const xml =
+        '<?xml version="1.0"?><plist version="1.0"><dict><key>allowQuit</key><true/></dict></plist>';
       const password = 'encryption-test-password';
       const sebData = await generateEncryptedSEB(xml, password);
 
@@ -265,7 +286,10 @@ describe('config generator', () => {
       };
       const password = 'test-password-123';
 
-      const result = await generateSEBConfig(config, { encrypt: true, password });
+      const result = await generateSEBConfig(config, {
+        encrypt: true,
+        password,
+      });
       const decompressedXml = await decompressSEBFile(result.data, password);
 
       const parsedConfig = parsePlist(decompressedXml);

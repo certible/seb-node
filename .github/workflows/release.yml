@@ -15,7 +15,7 @@ jobs:
   release-please:
     runs-on: ubuntu-latest
     steps:
-      - uses: googleapis/release-please-action@v4
+      - uses: googleapis/release-please-action@v5
         id: release
         with:
           release-type: node
@@ -28,12 +28,14 @@ jobs:
           registry-url: https://registry.npmjs.org/
           scope: '@certible'
         if: ${{ steps.release.outputs.release_created }}
+      - uses: pnpm/action-setup@v6
+        if: ${{ steps.release.outputs.release_created }}
         # Ensure npm 11.5.1 or later for trusted publishing
       - run: npm install -g npm@latest
         if: ${{ steps.release.outputs.release_created }}
-      - run: npm install
+      - run: pnpm install --frozen-lockfile
         if: ${{ steps.release.outputs.release_created }}
-      - run: npm run build
+      - run: pnpm run build
         if: ${{ steps.release.outputs.release_created }}
       - run: npm publish --access public --provenance
         if: ${{ steps.release.outputs.release_created }}
