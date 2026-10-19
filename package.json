@@ -1,6 +1,6 @@
 {
   "name": "@certible/seb-node",
-  "version": "3.0.0",
+  "version": "3.1.0",
   "description": "TypeScript library for creating Safe Exam Browser (SEB) configuration files and handling Config Keys (server-side and browser)",
   "keywords": [
     "safe-exam-browser",
