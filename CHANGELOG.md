@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.1.0](https://github.com/certible/seb-node/compare/v3.0.0...v3.1.0) (2026-10-19)
+
+
+### Features
+
+* support SEB for macOS 3.7 settings and float Config Key format ([#44](https://github.com/certible/seb-node/issues/44)) ([72241fd](https://github.com/certible/seb-node/commit/72241fdbf1121fb8005fdce8579e8b2caea995c0))
+
 ## [3.0.0](https://github.com/certible/seb-node/compare/v2.0.1...v3.0.0) (2026-03-24)
 
 
