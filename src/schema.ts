@@ -151,11 +151,23 @@ const processSchema = z.object({
 });
 
 const permittedProcessSchema = processSchema.extend({
+  allowAccessibility: z
+    .boolean()
+    .default(false)
+    .describe(
+      'Boolean indicating if this permitted application may keep its macOS Accessibility permissions, which exempts it from detectAccessibilityApps (macOS, SEB 3.7+)',
+    ),
   allowUser: z.boolean().default(false),
   arguments: z.array(z.string()).optional(),
   autostart: z.boolean().default(false),
   iconInTaskbar: z.boolean().default(true),
   runInBackground: z.boolean().default(false),
+  teamIdentifier: z
+    .string()
+    .optional()
+    .describe(
+      'String containing the Team Identifier from the code signature of the application (macOS)',
+    ),
 });
 
 export const sebConfigSchema = z
@@ -220,11 +232,12 @@ export const sebConfigSchema = z
       .describe(
         'String containing Base16 encoded data representing a SHA256 hash of the password required to enter the preferences window or to open a .seb configuration file for editing',
       ),
+    /** @deprecated SEB for macOS 3.7+ lists this setting as removed. */
     ignoreExitKeys: z
       .boolean()
       .default(false)
       .describe(
-        'Boolean indicating if SEB is ignoring the exit keys for quitting SEB by pressing and holding down three function keys in a specific order',
+        'Deprecated: SEB for macOS 3.7+ lists this setting as removed. Boolean indicating if SEB is ignoring the exit keys for quitting SEB by pressing and holding down three function keys in a specific order',
       ),
     quitURLConfirm: z
       .boolean()
@@ -314,11 +327,18 @@ export const sebConfigSchema = z
       .describe(
         'Boolean indicating if the SEB dock/taskbar should be displayed',
       ),
+    /** @deprecated SEB for macOS 3.7+ always hides the menu bar and ignores this setting. */
     showMenuBar: z
       .boolean()
       .default(false)
       .describe(
-        'Boolean indicating if the Mac OS X menu bar including all menus should be displayed or not',
+        'Deprecated: SEB for macOS 3.7+ always hides the menu bar and ignores this setting. Boolean indicating if the Mac OS X menu bar including all menus should be displayed or not',
+      ),
+    hideWiFiControls: z
+      .boolean()
+      .default(false)
+      .describe(
+        'Boolean indicating if the Wi-Fi control in the SEB dock should be hidden (macOS, SEB 3.7+)',
       ),
     showReloadButton: z
       .boolean()
@@ -338,11 +358,20 @@ export const sebConfigSchema = z
       .boolean()
       .default(false)
       .describe('Boolean indicating touch optimized appearance'),
-    browserScreenKeyboard: z.boolean().default(false).describe(''),
+    /** @deprecated SEB for macOS 3.7+ lists this setting as removed. */
+    browserScreenKeyboard: z
+      .boolean()
+      .default(false)
+      .describe(
+        'Deprecated: SEB for macOS 3.7+ lists this setting as removed.',
+      ),
+    /** @deprecated SEB for macOS 3.7+ lists this setting as removed. */
     enableTouchExit: z
       .boolean()
       .default(false)
-      .describe('Boolean indicating if touch exit is enabled'),
+      .describe(
+        'Deprecated: SEB for macOS 3.7+ lists this setting as removed. Boolean indicating if touch exit is enabled',
+      ),
     oskBehavior: z
       .int()
       .default(0)
@@ -401,13 +430,14 @@ export const sebConfigSchema = z
       .describe(
         'Integer with a value representing one of the newBrowserWindowPolicies: 0=getGenerallyBlocked, 1=openInSameWindow, 2=openInNewWindow',
       ),
+    /** @deprecated SEB for macOS 3.7+ lists this setting as removed. */
     newBrowserWindowByScriptPolicy: z
       .int()
       .min(0)
       .max(3)
       .default(2)
       .describe(
-        'Integer with a value representing one of the newBrowserWindowPolicies for hyperlinks opened from JavaScript or plug-ins',
+        'Deprecated: SEB for macOS 3.7+ lists this setting as removed. Integer with a value representing one of the newBrowserWindowPolicies for hyperlinks opened from JavaScript or plug-ins',
       ),
     newBrowserWindowAllowReload: z
       .boolean()
@@ -457,11 +487,12 @@ export const sebConfigSchema = z
       .describe(
         'String representing the width of new browser windows opened by links',
       ),
+    /** @deprecated SEB for macOS 3.7+ lists this setting as removed. */
     newBrowserWindowByScriptBlockForeign: z
       .boolean()
       .default(false)
       .describe(
-        'Boolean indicating if scripts opening foreign domains should be blocked',
+        'Deprecated: SEB for macOS 3.7+ lists this setting as removed. Boolean indicating if scripts opening foreign domains should be blocked',
       ),
     newBrowserWindowShowURL: z
       .int()
@@ -483,16 +514,22 @@ export const sebConfigSchema = z
       .describe(
         'Integer representing how URLs should be shown in browser windows',
       ),
+    /** @deprecated SEB for macOS 3.7+ lists this setting as removed. */
     browserWindowTitleSuffix: z
       .string()
       .default('')
-      .describe('String suffix to be appended to browser window titles'),
+      .describe(
+        'Deprecated: SEB for macOS 3.7+ lists this setting as removed. String suffix to be appended to browser window titles',
+      ),
 
     // Web technologies and plugins
+    /** @deprecated SEB for macOS 3.7+ lists this setting as removed. */
     enablePlugIns: z
       .boolean()
       .default(false)
-      .describe('Boolean indicating if browser plug-ins are enabled'),
+      .describe(
+        'Deprecated: SEB for macOS 3.7+ lists this setting as removed. Boolean indicating if browser plug-ins are enabled',
+      ),
     enableJava: z
       .boolean()
       .default(false)
@@ -537,11 +574,12 @@ export const sebConfigSchema = z
       .describe(
         'Boolean indicating if the browser profile should be removed when quitting SEB',
       ),
+    /** @deprecated SEB for macOS 3.7+ lists this setting as removed. */
     removeLocalStorage: z
       .boolean()
       .default(false)
       .describe(
-        "Boolean indicating if the browser's local storage database should be disabled",
+        "Deprecated: SEB for macOS 3.7+ lists this setting as removed. Boolean indicating if the browser's local storage database should be disabled",
       ),
     enablePrivateClipboard: z
       .boolean()
@@ -645,13 +683,14 @@ export const sebConfigSchema = z
       .boolean()
       .default(true)
       .describe('Boolean indicating if text in browser windows can be zoomed'),
+    /** @deprecated SEB for macOS 3.7+ lists this setting as removed. */
     zoomMode: z
       .int()
       .min(0)
       .max(2)
       .default(0)
       .describe(
-        'Integer with a value representing one of the SEBZoomModes: 0=Page, 1=Text',
+        'Deprecated: SEB for macOS 3.7+ lists this setting as removed. Integer with a value representing one of the SEBZoomModes: 0=Page, 1=Text',
       ),
     defaultPageZoomLevel: z
       .number()
@@ -667,17 +706,19 @@ export const sebConfigSchema = z
     // ==================================================================================
 
     // Audio and video capture
+    /** @deprecated SEB for macOS 3.7+ lists this setting as removed. */
     allowAudioCapture: z
       .boolean()
       .default(false)
       .describe(
-        'Boolean indicating if web applications are allowed to access the default microphone (using HTML 5 APIs)',
+        'Deprecated: SEB for macOS 3.7+ lists this setting as removed. Boolean indicating if web applications are allowed to access the default microphone (using HTML 5 APIs)',
       ),
+    /** @deprecated SEB for macOS 3.7+ lists this setting as removed. */
     allowVideoCapture: z
       .boolean()
       .default(false)
       .describe(
-        'Boolean indicating if web applications are allowed to access the default camera (using HTML 5 APIs)',
+        'Deprecated: SEB for macOS 3.7+ lists this setting as removed. Boolean indicating if web applications are allowed to access the default camera (using HTML 5 APIs)',
       ),
 
     // ==================================================================================
@@ -703,10 +744,13 @@ export const sebConfigSchema = z
       .describe(
         'Array of dictionaries each containing a set of URL filter rules',
       ),
+    /** @deprecated SEB for macOS 3.7+ lists this setting as removed. */
     blacklistURLFilter: z
       .string()
       .default('')
-      .describe('URL blacklist filter rules'),
+      .describe(
+        'Deprecated: SEB for macOS 3.7+ lists this setting as removed. URL blacklist filter rules',
+      ),
 
     // Network settings
     allowWlan: z
@@ -802,10 +846,13 @@ export const sebConfigSchema = z
       .describe(
         'Boolean indicating if users are allowed to switch to permitted applications',
       ),
+    /** @deprecated SEB for macOS 3.7+ lists this setting as removed. */
     allowUserSwitching: z
       .boolean()
       .default(false)
-      .describe('Boolean indicating if fast user switching is allowed'),
+      .describe(
+        'Deprecated: SEB for macOS 3.7+ lists this setting as removed. Boolean indicating if fast user switching is allowed',
+      ),
     allowVirtualMachine: z
       .boolean()
       .default(false)
@@ -941,6 +988,12 @@ export const sebConfigSchema = z
       ),
 
     // Platform version requirements
+    sebAllowedVersions: z
+      .array(z.string())
+      .default([])
+      .describe(
+        'Array of strings with the SEB client versions allowed to use this configuration, format OS.Major.Minor.[Patch].[Build].[AE].[min], for example "Win.3.9.min" or "Mac.3.7.1" (SEB for macOS 3.7.1+)',
+      ),
     allowMacOSVersionNumberCheckFull: z
       .boolean()
       .default(false)
@@ -977,8 +1030,10 @@ export const sebConfigSchema = z
       .describe('Patch version number for allowed iOS versions'),
     minMacOSVersion: z
       .int()
-      .default(0)
-      .describe('Minimum required macOS version'),
+      .default(10)
+      .describe(
+        'Integer representing the minimum required macOS version: 0=OS X 10.7, 1=10.8, 2=10.9, 3=10.10, 4=10.11, 5=macOS 10.12, 6=10.13, 7=10.14, 8=10.15, 9=11, 10=12, 11=13, 12=14, 13=15. Default is 10 (macOS 12) since SEB for macOS 3.7.1',
+      ),
 
     // Windows specific security
     createNewDesktop: z
@@ -1133,11 +1188,12 @@ export const sebConfigSchema = z
       .describe('Boolean indicating if sending logs requires admin password'),
 
     // Process monitoring
+    /** @deprecated SEB for macOS 3.7+ lists this setting as removed. */
     monitorProcesses: z
       .boolean()
       .default(true)
       .describe(
-        'Boolean indicating if SEB is monitoring which processes (and applications) are running during an exam',
+        'Deprecated: SEB for macOS 3.7+ lists this setting as removed. Boolean indicating if SEB is monitoring which processes (and applications) are running during an exam',
       ),
 
     // ==================================================================================
@@ -1157,11 +1213,12 @@ export const sebConfigSchema = z
       .describe(
         'Boolean indicating if a salt should be used for the Browser Exam Key',
       ),
+    /** @deprecated SEB for macOS 3.7+ lists this setting as removed. */
     browserURLSalt: z
       .boolean()
       .default(true)
       .describe(
-        'Boolean instructing the browser whether it should use the full URL of a HTTP request as salt when generating the Browser Exam Key request header field',
+        'Deprecated: SEB for macOS 3.7+ lists this setting as removed. Boolean instructing the browser whether it should use the full URL of a HTTP request as salt when generating the Browser Exam Key request header field',
       ),
     examKeySalt: z
       .instanceof(Buffer)
@@ -1370,6 +1427,14 @@ export const sebConfigSchema = z
       .describe(
         'Integer indicating the minimum screenshot interval for screen proctoring in milliseconds',
       ),
+    screenProctoringAACCapturePolicy: z
+      .int()
+      .min(0)
+      .max(2)
+      .default(2)
+      .describe(
+        'Integer representing how screen proctoring captures the screen in the macOS AAC Assessment Mode: 0=None, 1=Active window, 2=All windows (macOS, SEB 3.7+)',
+      ),
     screenProctoringServiceURL: z
       .string()
       .default('')
@@ -1496,9 +1561,27 @@ export const sebConfigSchema = z
       .describe('Boolean indicating if the Start Menu is enabled'),
 
     // Exit key configuration
-    exitKey1: z.int().default(0).describe('First exit key code'),
-    exitKey2: z.int().default(0).describe('Second exit key code'),
-    exitKey3: z.int().default(0).describe('Third exit key code'),
+    /** @deprecated SEB for macOS 3.7+ lists this setting as removed. */
+    exitKey1: z
+      .int()
+      .default(0)
+      .describe(
+        'Deprecated: SEB for macOS 3.7+ lists this setting as removed. First exit key code',
+      ),
+    /** @deprecated SEB for macOS 3.7+ lists this setting as removed. */
+    exitKey2: z
+      .int()
+      .default(0)
+      .describe(
+        'Deprecated: SEB for macOS 3.7+ lists this setting as removed. Second exit key code',
+      ),
+    /** @deprecated SEB for macOS 3.7+ lists this setting as removed. */
+    exitKey3: z
+      .int()
+      .default(0)
+      .describe(
+        'Deprecated: SEB for macOS 3.7+ lists this setting as removed. Third exit key code',
+      ),
     hookKeys: z
       .boolean()
       .default(false)
@@ -1675,19 +1758,23 @@ export const sebConfigSchema = z
     // ==================================================================================
 
     // Browser messaging and communication
+    /** @deprecated SEB for macOS 3.7+ lists this setting as removed. */
     browserMessagingSocket: z
       .string()
       .optional()
-      .describe('String containing a service URL for the socket server'),
+      .describe(
+        'Deprecated: SEB for macOS 3.7+ lists this setting as removed. String containing a service URL for the socket server',
+      ),
     browserMessagingSocketEnabled: z
       .boolean()
       .default(false)
       .describe('Boolean indicating if browser messaging socket is enabled'),
+    /** @deprecated SEB for macOS 3.7+ lists this setting as removed. */
     browserMessagingPingTime: z
       .int()
       .default(0)
       .describe(
-        'Integer representing the ping time for browser messaging in milliseconds',
+        'Deprecated: SEB for macOS 3.7+ lists this setting as removed. Integer representing the ping time for browser messaging in milliseconds',
       ),
 
     // ==================================================================================
@@ -1810,11 +1897,12 @@ export const sebConfigSchema = z
     // ==================================================================================
 
     // Windows system control
+    /** @deprecated SEB for macOS 3.7+ lists this setting as removed. */
     disableSessionChangeLockScreen: z
       .boolean()
       .default(false)
       .describe(
-        'Boolean indicating if session change lock screen should be disabled',
+        'Deprecated: SEB for macOS 3.7+ lists this setting as removed. Boolean indicating if session change lock screen should be disabled',
       ),
     enableWindowsUpdate: z
       .boolean()
@@ -1878,10 +1966,13 @@ export const sebConfigSchema = z
       .boolean()
       .default(false)
       .describe('Boolean indicating if developer console is allowed'),
+    /** @deprecated SEB for macOS 3.7+ lists this setting as removed. */
     enableDrawingEditor: z
       .boolean()
       .default(false)
-      .describe('Boolean indicating if drawing editor is enabled'),
+      .describe(
+        'Deprecated: SEB for macOS 3.7+ lists this setting as removed. Boolean indicating if drawing editor is enabled',
+      ),
     enableFindPrinter: z
       .boolean()
       .default(false)
@@ -1904,8 +1995,24 @@ export const sebConfigSchema = z
       .describe('Boolean indicating if legacy screen shots should be blocked'),
     aacDnsPrePinning: z
       .boolean()
-      .default(false)
-      .describe('Boolean indicating if AAC DNS pre-pinning is enabled'),
+      .default(true)
+      .describe(
+        'Boolean indicating if AAC DNS pre-pinning is enabled. Only used in the macOS AAC Assessment Mode, required for AAC on macOS 11 and 12.0',
+      ),
+    lockdownModePolicy: z
+      .int()
+      .min(0)
+      .max(2)
+      .default(0)
+      .describe(
+        'Integer representing the macOS lockdown mode: 0=Automatic (AAC Assessment Mode if supported and no screen/window capture, screen sharing or browser screen capture is enabled, otherwise Classic), 1=Enforce Classic kiosk mode, 2=Enforce AAC Assessment Mode (macOS, SEB 3.7+)',
+      ),
+    detectAccessibilityApps: z
+      .boolean()
+      .default(true)
+      .describe(
+        'Boolean indicating if SEB detects and terminates apps with macOS Accessibility permissions, unless permitted with allowAccessibility. Requires Full Disk Access (macOS 12+, SEB 3.7+)',
+      ),
 
     // Configuration and identity
     configFileCreateIdentity: z

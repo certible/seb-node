@@ -31,7 +31,7 @@ function stringifySEBJSON(value: unknown): string {
   }
 
   if (typeof value === 'number') {
-    return value.toString();
+    return Number.isInteger(value) ? value.toString() : formatSEBReal(value);
   }
 
   if (typeof value === 'string') {
@@ -93,6 +93,36 @@ function stringifySEBJSON(value: unknown): string {
   }
 
   return 'null';
+}
+
+/**
+ * Formats a floating point value like SEB does for the Config Key: C "%.15g" with an
+ * uppercase exponent marker, which matches "G15" of SEB for Windows (SEB for macOS 3.7+).
+ * Unverified: values exactly halfway between two 15 digit results can round differently.
+ * @see https://github.com/SafeExamBrowser/seb-win-refactoring/issues/1495
+ */
+function formatSEBReal(value: number): string {
+  if (!Number.isFinite(value)) {
+    return value.toString();
+  }
+
+  const [mantissa, exponentString] = value.toExponential(14).split('e');
+  const exponent = Number(exponentString);
+
+  if (exponent < -4 || exponent >= 15) {
+    const trimmedMantissa = mantissa.replace(/0+$/, '').replace(/\.$/, '');
+    const exponentSign = exponent < 0 ? '-' : '+';
+    const exponentDigits = String(Math.abs(exponent)).padStart(2, '0');
+    return `${trimmedMantissa}E${exponentSign}${exponentDigits}`;
+  }
+
+  const sign = value < 0 ? '-' : '';
+  const digits = mantissa.replace('-', '').replace('.', '');
+  const fixed =
+    exponent >= 0
+      ? `${digits.slice(0, exponent + 1)}.${digits.slice(exponent + 1)}`
+      : `0.${'0'.repeat(-exponent - 1)}${digits}`;
+  return sign + fixed.replace(/0+$/, '').replace(/\.$/, '');
 }
 
 /**

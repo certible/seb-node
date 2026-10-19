@@ -1,3 +1,4 @@
+import type { SEBConfigObject } from './config-key.js';
 import type { SEBConfig } from './schema.js';
 import crypto from 'node:crypto';
 import { promisify } from 'node:util';
@@ -42,6 +43,12 @@ export interface SEBGenerateResult {
    * File size in bytes
    */
   size: number;
+
+  /**
+   * The config object written to the file, after validation defaults and looseConfig.
+   * Use this object with generateConfigKey, so the Config Key matches the file.
+   */
+  config: SEBConfigObject;
 }
 
 /**
@@ -103,6 +110,7 @@ export async function generateSEBConfig(
     data: compressedData,
     xml: plistXml,
     size: compressedData.length,
+    config: validatedConfig as unknown as SEBConfigObject,
   };
 }
 
