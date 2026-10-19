@@ -295,6 +295,30 @@ describe('config-key', () => {
     });
   });
 
+  describe('floating point values', () => {
+    // Expected values from C printf "%.15g" with uppercase exponent marker
+    it.each([
+      [0.1, '0.1'],
+      [-2.25, '-2.25'],
+      [0.1 + 0.2, '0.3'],
+      [1 / 3, '0.333333333333333'],
+      [123.456, '123.456'],
+      [0.0001, '0.0001'],
+      [0.00001, '1E-05'],
+      [1.5e-7, '1.5E-07'],
+      [-0.00012345, '-0.00012345'],
+      [123456789012345.6, '123456789012346'],
+      [1234567890123456.8, '1.23456789012346E+15'],
+      [99999999999999.98, '100000000000000'],
+    ])('should format %d like SEB', (value, expected) => {
+      expect(convertToSEBJSON({ value })).toBe(`{"value":${expected}}`);
+    });
+
+    it('should keep integers and negative zero as integers', () => {
+      expect(convertToSEBJSON({ a: 1, b: -0 })).toBe('{"a":1,"b":0}');
+    });
+  });
+
   describe('generateConfigKeyHash', () => {
     it('should generate 64-character hex string', () => {
       const configKey = 'a'.repeat(64);

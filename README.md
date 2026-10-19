@@ -96,6 +96,13 @@ console.log('Config Key:', configKey);
 // e.g., "81aad4ab9dfd447cc479e6a4a7c9a544e2cafc7f3adeb68b2a21efad68eca4dc"
 ```
 
+If you create the file with `generateSEBConfig`, generate the Config Key from `result.config`. This object contains the schema defaults and the `looseConfig` values that are written to the file:
+
+```typescript
+const result = await generateSEBConfig(config, {}, looseConfig);
+const configKey = generateConfigKey(result.config);
+```
+
 ### Server-side: Verify Config Key from HTTP Headers
 
 When SEB sends requests, it includes the Config Key hash in the `X-SafeExamBrowser-ConfigKeyHash` header:

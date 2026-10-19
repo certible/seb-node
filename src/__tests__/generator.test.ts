@@ -95,6 +95,29 @@ describe('config generator', () => {
       expect(result.xml).toContain('unknownKey');
       expect(result.xml).toContain('some value');
     });
+
+    it('should return the config written to the file for Config Key generation', async () => {
+      const config = {
+        startURL: 'https://exam.example.com',
+      };
+
+      const result = await generateSEBConfig(
+        config,
+        {},
+        {
+          unknownKey: 'some value',
+        },
+      );
+      const fileConfig = parsePlist(await decompressSEBFile(result.data));
+
+      expect(result.config.unknownKey).toBe('some value');
+      expect(generateConfigKey(result.config)).toBe(
+        generateConfigKey(fileConfig),
+      );
+      expect(generateConfigKey(result.config)).not.toBe(
+        generateConfigKey(config),
+      );
+    });
   });
 
   describe('generatePlainSEB', () => {

@@ -12,6 +12,29 @@ describe('schema', () => {
       expect(result.success).toBe(true);
     });
 
+    it('should validate SEB for macOS 3.7 settings', () => {
+      const config = {
+        startURL: 'https://exam.example.com',
+        lockdownModePolicy: 1,
+        detectAccessibilityApps: true,
+        hideWiFiControls: false,
+        sebAllowedVersions: ['Mac.3.7.min'],
+        screenProctoringAACCapturePolicy: 2,
+        permittedProcesses: [
+          {
+            executable: 'App',
+            allowAccessibility: true,
+            teamIdentifier: 'ABCDE12345',
+          },
+        ],
+      };
+
+      expect(sebConfigSchema.safeParse(config).success).toBe(true);
+      expect(
+        sebConfigSchema.safeParse({ ...config, lockdownModePolicy: 3 }).success,
+      ).toBe(false);
+    });
+
     it('should reject invalid URL', () => {
       const config = {
         startURL: 'not-a-valid-url',
